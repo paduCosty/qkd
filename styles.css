@@ -1,24 +1,50 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #f4f4f9;
+    overflow: hidden;
+}
+
+.animated-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://example.com/qwan-bg.gif') no-repeat center center fixed;
+    background-size: cover;
+    animation: animateBackground 10s linear infinite;
+}
+
+@keyframes animateBackground {
+    from { background-position: 0 0; }
+    to { background-position: 100% 100%; }
 }
 
 .container {
+    position: relative;
+    z-index: 1;
     width: 300px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
 
 form {
-    background-color: white;
+    background-color: transparent;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: none;
     transition: transform 0.3s ease-in-out;
+}
+
+form:hover {
+    transform: scale(1.05);
 }
 
 form:hover {
@@ -28,23 +54,32 @@ form:hover {
 h2 {
     margin-bottom: 20px;
     color: #333;
+    font-size: 24px;
+    font-weight: bold;
 }
 
 label {
     display: block;
-    margin-bottom: 5px;
-    color: #555;
+    margin-bottom: 10px;
+    color: #333;
+    font-weight: bold;
 }
 
 input[type="text"],
 input[type="password"] {
     width: calc(100% - 22px);
-    padding: 10px;
-    margin-bottom: 15px;
-    border: none;
-    border-bottom: 2px solid #ccc;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
     outline: none;
-    transition: border-color 0.3s ease-in-out;
+    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 10px rgba(40, 167, 69, 0.3);
 }
 
 input[type="text"]:focus,
@@ -53,13 +88,19 @@ input[type="password"]:focus {
 }
 
 input[type="submit"] {
+    width: 100%;
+    padding: 12px;
     background-color: #28a745;
     color: white;
-    padding: 10px 15px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+input[type="submit"]:hover {
+    background-color: #218838;
+    transform: scale(1.05);
 }
 
 input[type="submit"]:hover {
