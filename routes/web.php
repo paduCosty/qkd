@@ -29,6 +29,10 @@ Route::post('/logout', function () {
     return redirect()->route('login');
 })->middleware('auth')->name('logout');
 
+// Public pages
+Route::get('/antrenori', App\Livewire\Pages\Coaches::class)->name('coaches');
+Route::get('/invite/{token}', App\Livewire\Auth\RegisterViaInvite::class)->name('invite');
+
 // Student area
 Route::middleware(['auth', 'role:student'])->group(function () {
     Route::get('/dashboard', App\Livewire\Student\Dashboard::class)->name('student.dashboard');

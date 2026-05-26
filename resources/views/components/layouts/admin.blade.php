@@ -56,8 +56,20 @@
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
                 </svg>
-                Curriculă
+                Programă
             </a>
+            <a href="{{ route('coaches') }}"
+               class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-colors
+                      {{ request()->routeIs('coaches') ? 'bg-gold/10 text-gold font-semibold' : 'text-dim hover:bg-white/4 hover:text-content' }}">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                </svg>
+                Antrenori
+            </a>
+
+            <div class="h-px bg-border mx-1 my-1"></div>
+
+            @livewire('admin.invite-button')
         </nav>
 
         {{-- User + logout --}}

@@ -319,6 +319,37 @@
                         </div>
                     @endforeach
 
+                    {{-- Add category (edit mode) --}}
+                    <div x-show="mode === 'edit'" class="mt-1">
+                        @if($addCatGradeId === $grade->id)
+                            <div class="bg-surface border border-gold/30 rounded-xl px-3 py-3 flex flex-col gap-2">
+                                <div class="flex gap-2">
+                                    <input wire:model="newCatNameViet" type="text" placeholder="Denumire vietnameză (ex: BO PHAP)"
+                                           class="flex-1 bg-card border border-border rounded-lg px-2.5 py-1.5 text-gold text-xs font-bold uppercase tracking-wide">
+                                    <input wire:model="newCatNameRo" type="text" placeholder="Traducere română (ex: Poziții)"
+                                           class="flex-1 bg-card border border-border rounded-lg px-2.5 py-1.5 text-content text-xs">
+                                </div>
+                                @error('newCatNameViet') <p class="text-red-400 text-xs">{{ $message }}</p> @enderror
+                                @error('newCatNameRo') <p class="text-red-400 text-xs">{{ $message }}</p> @enderror
+                                <div class="flex gap-2">
+                                    <button wire:click="addCategory"
+                                            class="px-4 py-1.5 bg-gold hover:bg-gold-light text-[#08080e] font-bold text-xs rounded-lg cursor-pointer border-none transition-colors">
+                                        Adaugă
+                                    </button>
+                                    <button wire:click="$set('addCatGradeId', null)"
+                                            class="px-3 py-1.5 bg-transparent border border-border text-dim hover:text-content text-xs rounded-lg cursor-pointer transition-colors">
+                                        Anulează
+                                    </button>
+                                </div>
+                            </div>
+                        @else
+                            <button wire:click="openAddCategory({{ $grade->id }})"
+                                    class="w-full bg-transparent border border-dashed border-gold/30 text-gold text-xs font-semibold py-2 rounded-xl cursor-pointer hover:bg-gold/5 transition-colors">
+                                + Adaugă categorie
+                            </button>
+                        @endif
+                    </div>
+
                 </div>
             </div>
         @endforeach

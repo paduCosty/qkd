@@ -17,15 +17,20 @@ class Curriculum extends Component
     public string $editCatNameViet = '';
     public string $editCatNameRo   = '';
 
+    // Category add
+    public ?int   $addCatGradeId  = null;
+    public string $newCatNameViet = '';
+    public string $newCatNameRo   = '';
+
     // Technique inline edit
     public ?int    $editTechId       = null;
     public string  $editTechNameViet = '';
     public string  $editTechNameRo   = '';
     public string  $editTechType     = 'simple';
     public string  $editTechDesc     = '';
-    public string  $editTechVideo    = '';   // URL or keep existing path
+    public string  $editTechVideo    = '';
     public string  $editTechNote     = '';
-    public string  $editVideoTab     = 'url';   // 'url' | 'upload'
+    public string  $editVideoTab     = 'url';
     public mixed   $editTechFile     = null;
 
     // Add technique
@@ -36,10 +41,39 @@ class Curriculum extends Component
     public string $techDescription = '';
     public string $techVideoUrl    = '';
     public string $techCoachNote   = '';
-    public string $addVideoTab     = 'url';   // 'url' | 'upload'
+    public string $addVideoTab     = 'url';
     public mixed  $techVideoFile   = null;
 
     // ── Categories ──────────────────────────────────────────────────────────
+
+    public function openAddCategory(int $gradeId): void
+    {
+        $this->addCatGradeId  = $gradeId;
+        $this->newCatNameViet = '';
+        $this->newCatNameRo   = '';
+        $this->editCatId      = null;
+        $this->editTechId     = null;
+        $this->addTechCatId   = null;
+    }
+
+    public function addCategory(): void
+    {
+        $this->validate([
+            'newCatNameViet' => ['required', 'string', 'max:100'],
+            'newCatNameRo'   => ['required', 'string', 'max:150'],
+        ]);
+
+        $maxOrder = Category::where('grade_id', $this->addCatGradeId)->max('order') ?? -1;
+
+        Category::create([
+            'grade_id'  => $this->addCatGradeId,
+            'name_viet' => strtoupper($this->newCatNameViet),
+            'name_ro'   => $this->newCatNameRo,
+            'order'     => $maxOrder + 1,
+        ]);
+
+        $this->addCatGradeId = null;
+    }
 
     public function startEditCategory(int $id): void
     {
@@ -49,6 +83,7 @@ class Curriculum extends Component
         $this->editCatNameRo   = $cat->name_ro;
         $this->editTechId      = null;
         $this->addTechCatId    = null;
+        $this->addCatGradeId   = null;
     }
 
     public function saveCategory(): void
@@ -86,6 +121,7 @@ class Curriculum extends Component
         $this->techVideoFile   = null;
         $this->editTechId      = null;
         $this->editCatId       = null;
+        $this->addCatGradeId   = null;
     }
 
     public function addTechnique(): void
@@ -97,7 +133,7 @@ class Curriculum extends Component
         ];
 
         if ($this->addVideoTab === 'upload' && $this->techVideoFile) {
-            $rules['techVideoFile'] = ['file', 'mimes:mp4,webm,mov', 'max:204800']; // 200 MB
+            $rules['techVideoFile'] = ['file', 'mimes:mp4,webm,mov', 'max:204800'];
         }
 
         $this->validate($rules);
@@ -138,17 +174,17 @@ class Curriculum extends Component
         $this->editTechNote     = $tech->coach_note ?? '';
         $this->editTechFile     = null;
 
-        // Determine which tab to show based on existing video
         if ($tech->video_url && ! $tech->youtubeEmbedUrl()) {
             $this->editVideoTab  = 'upload';
-            $this->editTechVideo = $tech->video_url; // keep existing local path
+            $this->editTechVideo = $tech->video_url;
         } else {
             $this->editVideoTab  = 'url';
             $this->editTechVideo = $tech->video_url ?? '';
         }
 
-        $this->addTechCatId = null;
-        $this->editCatId    = null;
+        $this->addTechCatId  = null;
+        $this->editCatId     = null;
+        $this->addCatGradeId = null;
     }
 
     public function saveTechnique(): void
@@ -167,10 +203,9 @@ class Curriculum extends Component
 
         $tech = Technique::findOrFail($this->editTechId);
 
-        $videoUrl = $tech->video_url; // default: keep existing
+        $videoUrl = $tech->video_url;
 
         if ($this->editVideoTab === 'upload' && $this->editTechFile) {
-            // Delete old local file if it existed
             if ($tech->video_url && ! $tech->youtubeEmbedUrl()) {
                 \Storage::disk('public')->delete(str_replace('storage/', '', $tech->video_url));
             }
@@ -196,7 +231,6 @@ class Curriculum extends Component
     {
         $tech = Technique::findOrFail($id);
 
-        // Delete local video file if present
         if ($tech->video_url && ! $tech->youtubeEmbedUrl()) {
             \Storage::disk('public')->delete(str_replace('storage/', '', $tech->video_url));
         }
@@ -213,6 +247,6 @@ class Curriculum extends Component
 
         return view('livewire.admin.curriculum', [
             'grades' => $grades,
-        ])->layout('components.layouts.admin', ['title' => 'Curriculă']);
+        ])->layout('components.layouts.admin', ['title' => 'Programă']);
     }
 }

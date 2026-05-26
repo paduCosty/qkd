@@ -2,9 +2,11 @@
 
 namespace App\Livewire\Admin;
 
+use App\Models\AdminInvitation;
 use App\Models\Grade;
 use App\Models\Technique;
 use App\Models\User;
+use Illuminate\Support\Str;
 use Livewire\Component;
 
 class Dashboard extends Component
@@ -19,6 +21,9 @@ class Dashboard extends Component
     public string $editGradeName = '';
     public int    $editGradeOrder = 0;
 
+    // Invite link
+    public ?string $inviteLink = null;
+
     public function approveStudent(int $id): void
     {
         User::where('id', $id)->where('role', 'student')->update(['status' => 'active']);
@@ -27,6 +32,29 @@ class Dashboard extends Component
     public function rejectStudent(int $id): void
     {
         User::where('id', $id)->where('role', 'student')->update(['status' => 'rejected']);
+    }
+
+    public function promoteToAdmin(int $id): void
+    {
+        abort_unless(auth()->user()->is_owner, 403);
+
+        User::where('id', $id)->where('role', 'student')->update([
+            'role'   => 'admin',
+            'status' => 'active',
+        ]);
+    }
+
+    public function generateInvite(): void
+    {
+        $token = Str::random(48);
+
+        AdminInvitation::create([
+            'token'      => $token,
+            'created_by' => auth()->id(),
+            'expires_at' => now()->addHours(48),
+        ]);
+
+        $this->inviteLink = route('invite', ['token' => $token]);
     }
 
     public function setStudentGrade(int $userId, $gradeId): void

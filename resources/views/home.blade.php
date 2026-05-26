@@ -35,7 +35,11 @@
                 </div>
                 <span class="font-[family-name:var(--font-display)] text-[13px] font-bold text-gold tracking-[2px]">QWAN KI DO</span>
             </div>
-            <div class="flex items-center gap-2.5">
+            <div class="flex items-center gap-3">
+                <a href="{{ route('coaches') }}"
+                   class="px-4 py-2 text-[13px] text-dim hover:text-content transition-colors">
+                    Antrenori
+                </a>
                 <a href="{{ route('login') }}"
                    class="px-4 py-2 text-[13px] text-dim border border-border rounded-lg hover:border-content/30 hover:text-content transition-colors">
                     Intră în cont
@@ -90,7 +94,7 @@
                     <div class="w-11 h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center mb-5">
                         <svg width="22" height="22" fill="none" stroke="#c9960f" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
                     </div>
-                    <h3 class="font-semibold text-[16px] mb-2">Curriculă pe grade</h3>
+                    <h3 class="font-semibold text-[16px] mb-2">Programă pe grade</h3>
                     <p class="text-dim text-sm leading-relaxed">Toată materia structurată pe grade (câp), categorii și tehnici — exact cum se predă în sala de antrenament.</p>
                 </div>
 
