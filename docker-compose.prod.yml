@@ -1,0 +1,76 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# PRODUCTION  (folosit de Coolify)
+# Variabilele de environment se setează în UI-ul Coolify, nu în .env
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: prod
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=coolify"
+      - "traefik.http.services.app.loadbalancer.server.port=80"
+    environment:
+      APP_ENV: production
+      APP_DEBUG: 'false'
+      APP_URL: '${APP_URL}'
+      APP_KEY: '${APP_KEY}'
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: '${DB_DATABASE}'
+      DB_USERNAME: '${DB_USERNAME}'
+      DB_PASSWORD: '${DB_PASSWORD}'
+      QUEUE_CONNECTION: database
+      SESSION_DRIVER: file
+      CACHE_STORE: file
+      LOG_CHANNEL: stderr
+      LOG_LEVEL: error
+      MAIL_MAILER: '${MAIL_MAILER}'
+      MAIL_HOST: '${MAIL_HOST}'
+      MAIL_PORT: '${MAIL_PORT}'
+      MAIL_USERNAME: '${MAIL_USERNAME}'
+      MAIL_PASSWORD: '${MAIL_PASSWORD}'
+      MAIL_FROM_ADDRESS: '${MAIL_FROM_ADDRESS}'
+      MAIL_FROM_NAME: 'Qwan Ki Do'
+    volumes:
+      - 'app_storage:/var/www/html/storage'
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - internal
+      - coolify
+
+  db:
+    image: 'mysql:8.0'
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_USER: '${DB_USERNAME}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ROOT_PASSWORD: '${DB_ROOT_PASSWORD}'
+    volumes:
+      - 'app_db:/var/lib/mysql'
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  app_storage:
+  app_db:
+
+networks:
+  internal:
+    driver: bridge
+  coolify:
+    external: true

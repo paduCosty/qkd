@@ -1,0 +1,55 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans:    'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Cinzel', serif;
+
+    --color-gold:        #c9960f;
+    --color-gold-light:  #f0c040;
+
+    --color-surface:     #09090f;
+    --color-card:        #111119;
+    --color-card-2:      #161624;
+    --color-border:      #1d1d30;
+
+    --color-content:     #e4e4f0;
+    --color-dim:         #6b6b8a;
+}
+
+/* ── Base ── */
+* { box-sizing: border-box; }
+
+body {
+    background-color: var(--color-surface);
+    color: var(--color-content);
+    font-family: var(--font-sans);
+    margin: 0;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar       { width: 4px; }
+::-webkit-scrollbar-thumb { background: #2a2a40; border-radius: 2px; }
+
+/* ── Focus ── */
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--color-gold) !important;
+}
+
+/* ── Belt display ── */
+.belt { display: inline-flex; align-items: center; background: #f0ece0; border-radius: 4px; padding: 3px 7px; gap: 3px; }
+.cap  { width: 7px; height: 18px; background: #2563eb; border-radius: 1px; }
+
+/* ── Viet name ── */
+.viet-name {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--color-gold);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}

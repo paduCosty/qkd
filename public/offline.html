@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qwan Ki Do — Offline</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #09090f; color: #e4e4f0; font-family: 'Inter', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+        .card { text-align: center; max-width: 320px; }
+        svg { margin-bottom: 24px; }
+        h1 { font-size: 22px; font-weight: 700; color: #c9960f; margin-bottom: 10px; letter-spacing: 2px; }
+        p  { color: #6b6b8a; font-size: 14px; line-height: 1.6; }
+        button { margin-top: 28px; background: #c9960f; color: #08080e; border: none; border-radius: 9px; padding: 13px 28px; font-size: 15px; font-weight: 700; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <svg width="72" height="72" viewBox="0 0 44 44" fill="none">
+            <circle cx="22" cy="22" r="17" stroke="#c9960f" stroke-width="1.2" opacity=".4"/>
+            <text x="22" y="29" text-anchor="middle" font-family="serif" font-size="15" font-weight="600" fill="#c9960f">氣</text>
+        </svg>
+        <h1>OFFLINE</h1>
+        <p>Nu există conexiune la internet.<br>Verifică rețeaua și încearcă din nou.</p>
+        <button onclick="window.location.reload()">Reîncearcă</button>
+    </div>
+</body>
+</html>
