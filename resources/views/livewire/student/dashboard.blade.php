@@ -1,0 +1,280 @@
+<div>
+
+    {{-- Topbar --}}
+    <div class="bg-card border-b border-border px-5 py-3.5 flex items-center justify-between sticky top-0 z-50">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#1a1a30] to-[#2a2a4a] border border-gold flex items-center justify-center font-bold text-[15px] text-gold shrink-0">
+                {{ strtoupper(substr($user->name, 0, 1)) }}
+            </div>
+            <div>
+                <div class="font-bold text-[15px] leading-tight">{{ $user->name }}</div>
+                @if($user->currentGrade)
+                    <div class="flex items-center gap-1.5 mt-0.5">
+                        @if($user->currentGrade->order === 0)
+                            <div class="belt"><span class="text-[11px] text-[#555] font-semibold">0</span></div>
+                        @else
+                            <div class="belt">
+                                @for($i = 0; $i < $user->currentGrade->order; $i++)
+                                    <div class="cap"></div>
+                                @endfor
+                            </div>
+                        @endif
+                        <span class="text-dim text-xs">{{ $user->currentGrade->name }}</span>
+                    </div>
+                @endif
+            </div>
+        </div>
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="text-dim hover:text-content transition-colors p-1.5 cursor-pointer bg-transparent border-none" title="Deconectare">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            </button>
+        </form>
+    </div>
+
+    {{-- Body --}}
+    <div x-data="{ filter: 'all' }" class="flex flex-col md:flex-row">
+
+        {{-- Left column --}}
+        <div class="md:w-[340px] md:shrink-0 p-5 md:p-6 md:border-r md:border-border md:sticky md:top-[69px] md:h-[calc(100vh-69px)] md:overflow-y-auto">
+
+            {{-- Stats --}}
+            <div class="grid grid-cols-3 gap-2.5 mb-5">
+                <div class="bg-card border border-border rounded-xl p-3.5 text-center">
+                    <div class="text-[26px] font-extrabold text-emerald-400 leading-none">{{ $masteredCount }}</div>
+                    <div class="text-[11px] text-dim mt-1">Stăpânite</div>
+                </div>
+                <div class="bg-card border border-border rounded-xl p-3.5 text-center">
+                    <div class="text-[26px] font-extrabold text-amber-400 leading-none">{{ $progressCount }}</div>
+                    <div class="text-[11px] text-dim mt-1">În lucru</div>
+                </div>
+                <div class="bg-card border border-border rounded-xl p-3.5 text-center">
+                    <div class="text-[26px] font-extrabold text-dim leading-none">{{ $unknownCount }}</div>
+                    <div class="text-[11px] text-dim mt-1">De studiat</div>
+                </div>
+            </div>
+
+            {{-- Filter pills --}}
+            <div class="flex gap-2 mb-5 overflow-x-auto pb-0.5 [scrollbar-width:none]">
+                <button @click="filter = 'all'"
+                        :class="filter === 'all' ? 'bg-gold/12 text-gold border-gold/30 font-bold' : 'text-dim border-border hover:border-content/20 hover:text-content'"
+                        class="text-xs px-3.5 py-1.5 rounded-full border shrink-0 transition-colors cursor-pointer bg-transparent">
+                    Toate <span class="opacity-60 font-normal">{{ $totalCount }}</span>
+                </button>
+                <button @click="filter = 'mastered'"
+                        :class="filter === 'mastered' ? 'bg-gold/12 text-gold border-gold/30 font-bold' : 'text-dim border-border hover:border-content/20 hover:text-content'"
+                        class="text-xs px-3.5 py-1.5 rounded-full border shrink-0 transition-colors cursor-pointer bg-transparent">
+                    ✓ Stăpânite <span class="opacity-60 font-normal">{{ $masteredCount }}</span>
+                </button>
+                <button @click="filter = 'progress'"
+                        :class="filter === 'progress' ? 'bg-gold/12 text-gold border-gold/30 font-bold' : 'text-dim border-border hover:border-content/20 hover:text-content'"
+                        class="text-xs px-3.5 py-1.5 rounded-full border shrink-0 transition-colors cursor-pointer bg-transparent">
+                    ⚡ În lucru <span class="opacity-60 font-normal">{{ $progressCount }}</span>
+                </button>
+                <button @click="filter = 'unknown'"
+                        :class="filter === 'unknown' ? 'bg-gold/12 text-gold border-gold/30 font-bold' : 'text-dim border-border hover:border-content/20 hover:text-content'"
+                        class="text-xs px-3.5 py-1.5 rounded-full border shrink-0 transition-colors cursor-pointer bg-transparent">
+                    — De studiat <span class="opacity-60 font-normal">{{ $unknownCount }}</span>
+                </button>
+            </div>
+
+            {{-- Continue card --}}
+            @if($lastProgress)
+                <p class="text-[11px] uppercase tracking-[1.5px] text-dim font-semibold mb-2.5">Continuă de unde ai rămas</p>
+                <div class="bg-card border border-border rounded-xl p-3.5 flex items-center gap-3.5 mb-5">
+                    <div class="w-14 h-11 bg-gradient-to-br from-[#1a1a30] to-[#0f0f1e] rounded-lg shrink-0 flex items-center justify-center border border-border">
+                        <svg width="20" height="20" fill="#c9960f" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="viet-name mb-0.5">{{ $lastProgress->name_viet }}</div>
+                        <div class="text-[13px] font-medium text-content truncate">{{ $lastProgress->name_ro }}</div>
+                        @if($lastProgress->category)
+                            <div class="text-[11px] text-dim mt-0.5">{{ $lastProgress->category->name_viet }}</div>
+                        @endif
+                    </div>
+                    <span class="text-[11px] px-2.5 py-1 rounded-full bg-amber-400/12 text-amber-400 border border-amber-400/25 whitespace-nowrap shrink-0">⚡ În lucru</span>
+                </div>
+            @elseif($totalCount === 0)
+                <div class="bg-card border border-border rounded-xl p-5 text-center mb-5">
+                    <p class="text-dim text-sm">Antrenorul nu a adăugat materie încă.</p>
+                </div>
+            @endif
+
+        </div>
+
+        {{-- Right column --}}
+        <div class="flex-1 p-4 md:p-6 pb-24">
+            <p class="text-[11px] uppercase tracking-[1.5px] text-dim font-semibold mb-3">Materie pe grade</p>
+
+            @forelse($grades as $grade)
+                @php
+                    $gradeTechs    = $grade->categories->flatMap->techniques;
+                    $gradeTotal    = $gradeTechs->count();
+                    $gradeMastered = $gradeTechs->filter(fn($t) => ($progressMap[$t->id] ?? null) === 'mastered')->count();
+                    $pct           = $gradeTotal > 0 ? round($gradeMastered / $gradeTotal * 100) : 0;
+                    $isCurrentGrade = $user->current_grade_id === $grade->id;
+                @endphp
+
+                <div wire:key="grade-{{ $grade->id }}"
+                     x-data="{ open: {{ $isCurrentGrade ? 'true' : 'false' }} }"
+                     class="bg-card border border-border rounded-xl mb-2 overflow-hidden">
+
+                    {{-- Grade header --}}
+                    <div @click="open = !open" class="px-4 py-3.5 flex items-center justify-between cursor-pointer select-none">
+                        <div class="flex items-center gap-3">
+                            @if($grade->order === 0)
+                                <div class="belt"><span class="text-[11px] text-[#555] font-semibold">0</span></div>
+                            @else
+                                <div class="belt">
+                                    @for($i = 0; $i < $grade->order; $i++)
+                                        <div class="cap"></div>
+                                    @endfor
+                                </div>
+                            @endif
+                            <div>
+                                <div class="font-semibold text-[14px]">{{ $grade->name }}</div>
+                                <div class="text-xs text-dim mt-0.5">{{ $gradeMastered }} / {{ $gradeTotal }} tehnici</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-11 h-1.5 bg-border rounded-full overflow-hidden">
+                                <div class="h-full rounded-full transition-all"
+                                     style="width:{{ $pct }}%;background:{{ $pct === 100 ? '#10b981' : ($pct > 0 ? '#f59e0b' : 'transparent') }};"></div>
+                            </div>
+                            <svg :style="open ? 'transform:rotate(180deg)' : ''"
+                                 style="transition:transform .2s"
+                                 class="text-dim shrink-0"
+                                 width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    {{-- Grade body --}}
+                    <div x-show="open"
+                         x-transition:enter="transition ease-out duration-150"
+                         x-transition:enter-start="opacity-0"
+                         x-transition:enter-end="opacity-100"
+                         class="px-3.5 pb-3.5">
+                        <div class="border-t border-border pt-2.5 flex flex-col gap-1">
+
+                            @foreach($grade->categories as $category)
+                                <div class="flex items-center justify-between {{ $loop->first ? 'mt-2' : 'mt-3' }} mb-1.5 pb-1.5 border-b border-white/4">
+                                    <span class="text-[9px] font-extrabold text-dim uppercase tracking-[2px]">{{ $category->name_viet }} — {{ $category->name_ro }}</span>
+                                    <span class="text-[10px] text-[#3a3a55]">{{ $category->techniques->count() }}</span>
+                                </div>
+
+                                <div class="flex flex-col gap-1.5">
+                                    @foreach($category->techniques as $technique)
+                                        @php
+                                            $status    = $progressMap[$technique->id] ?? 'unknown';
+                                            $isForm    = $technique->type === 'form';
+                                            $hasDetail = $technique->description || $technique->coach_note || $technique->video_url;
+                                        @endphp
+
+                                        <div wire:key="tech-{{ $technique->id }}"
+                                             x-data="{ open: false }"
+                                             data-status="{{ $status }}"
+                                             x-show="filter === 'all' || $el.dataset.status === filter"
+                                             class="bg-card-2 rounded-lg overflow-hidden {{ $isForm ? 'border border-gold/10' : 'border border-border' }}">
+
+                                            {{-- Row --}}
+                                            <div @click="{{ $hasDetail ? 'open = !open' : '' }}"
+                                                 class="flex items-center gap-2 px-2.5 py-1.5 {{ $hasDetail ? 'cursor-pointer hover:bg-white/2' : '' }} transition-colors">
+
+                                                @if($hasDetail)
+                                                    <svg :style="open ? 'transform:rotate(90deg)' : ''"
+                                                         style="transition:transform .15s"
+                                                         class="text-dim shrink-0"
+                                                         width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                        <path d="M9 18l6-6-6-6"/>
+                                                    </svg>
+                                                @else
+                                                    <span class="w-[10px] shrink-0"></span>
+                                                @endif
+
+                                                <div class="flex-1 min-w-0">
+                                                    @if($isForm)
+                                                        <div class="flex items-center gap-1.5 mb-0.5">
+                                                            <span class="viet-name text-[10px]">{{ $technique->name_viet }}</span>
+                                                            <span class="text-[9px] text-gold bg-gold/8 border border-gold/18 px-1 py-px rounded">FORMĂ</span>
+                                                        </div>
+                                                        <span class="text-xs text-dim">{{ $technique->name_ro }}</span>
+                                                    @else
+                                                        <span class="viet-name text-[10px]">{{ $technique->name_viet }}</span>
+                                                        <span class="text-xs text-dim ml-1.5">{{ $technique->name_ro }}</span>
+                                                    @endif
+                                                </div>
+
+                                                @if($technique->video_url)
+                                                    <svg class="text-gold shrink-0" width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg>
+                                                @endif
+
+                                                <button wire:click.stop="cycleStatus({{ $technique->id }})"
+                                                        wire:loading.attr="disabled"
+                                                        class="shrink-0 border-none bg-transparent cursor-pointer p-0">
+                                                    @if($status === 'mastered')
+                                                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/12 text-emerald-400 border border-emerald-500/25 block whitespace-nowrap">✓</span>
+                                                    @elseif($status === 'progress')
+                                                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-400/12 text-amber-400 border border-amber-400/25 block whitespace-nowrap">⚡</span>
+                                                    @else
+                                                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-dim/12 text-dim border border-dim/20 block whitespace-nowrap">—</span>
+                                                    @endif
+                                                </button>
+                                            </div>
+
+                                            {{-- Detail panel --}}
+                                            @if($hasDetail)
+                                                <div x-show="open" x-transition class="border-t border-border px-3 py-2.5 flex flex-col gap-2">
+                                                    @if($technique->description)
+                                                        <p class="text-[13px] text-content leading-relaxed m-0">{{ $technique->description }}</p>
+                                                    @endif
+                                                    @if($technique->coach_note)
+                                                        <div class="bg-gold/6 border border-gold/15 rounded-lg px-3 py-2">
+                                                            <div class="text-[9px] font-bold text-gold uppercase tracking-[1.5px] mb-1">Notă antrenor</div>
+                                                            <p class="text-[13px] text-content leading-relaxed m-0">{{ $technique->coach_note }}</p>
+                                                        </div>
+                                                    @endif
+                                                    @if($technique->video_url)
+                                                        @if($technique->isLocalVideo())
+                                                            <video controls class="w-full rounded-lg" style="max-height:320px">
+                                                                <source src="{{ asset($technique->video_url) }}" type="video/mp4">
+                                                            </video>
+                                                        @elseif($technique->youtubeEmbedUrl())
+                                                            <div class="relative w-full rounded-lg overflow-hidden" style="padding-bottom:56.25%">
+                                                                <iframe class="absolute inset-0 w-full h-full"
+                                                                        src="{{ $technique->youtubeEmbedUrl() }}"
+                                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                                        allowfullscreen loading="lazy"></iframe>
+                                                            </div>
+                                                        @else
+                                                            <a href="{{ $technique->video_url }}" target="_blank" rel="noopener"
+                                                               class="inline-flex items-center gap-1.5 text-xs text-gold font-semibold no-underline hover:text-gold-light transition-colors">
+                                                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>
+                                                                Vizualizează video
+                                                            </a>
+                                                        @endif
+                                                    @endif
+                                                </div>
+                                            @endif
+
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endforeach
+
+                        </div>
+                    </div>
+
+                </div>
+            @empty
+                <div class="bg-card border border-border rounded-xl p-8 text-center">
+                    <p class="text-dim text-sm">Niciun grad adăugat încă. Antrenorul va adăuga materia în curând.</p>
+                </div>
+            @endforelse
+
+        </div>
+
+    </div>
+
+</div>

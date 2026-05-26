@@ -1,0 +1,84 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# LOCAL DEVELOPMENT
+# Pornire: docker-compose up -d
+# Backend:  http://qwankido.test  (via Traefik global pe rețeaua "shared")
+# Vite HMR: rulează automat în containerul "node" pe portul 5175
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+  node:
+    image: node:20-alpine
+    container_name: qwankido_node
+    working_dir: /app
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "5175:5173"
+    command: npm run dev
+    networks:
+      - qwankido_net
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    container_name: qwankido_app
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      DB_HOST: db
+      DB_PORT: 3306
+    volumes:
+      - .:/var/www/html
+      - /var/www/html/vendor
+      - qwankido_storage:/var/www/html/storage
+      - qwankido_bootstrap:/var/www/html/bootstrap/cache
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.qwankido.rule=Host(`qwankido.test`)"
+      - "traefik.http.routers.qwankido.entrypoints=http"
+      - "traefik.http.services.qwankido.loadbalancer.server.port=80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - qwankido_net
+      - shared
+
+  db:
+    image: mysql:8.0
+    container_name: qwankido_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-qwankido}
+      MYSQL_USER: ${DB_USERNAME:-qwankido}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootsecret}
+    volumes:
+      - qwankido_db:/var/lib/mysql
+    ports:
+      - "3312:3306"    # 3311 ca să nu ciocnească cu Documate pe 3310
+    networks:
+      - qwankido_net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  qwankido_storage:
+  qwankido_bootstrap:
+  qwankido_db:
+
+networks:
+  qwankido_net:
+    driver: bridge
+  shared:
+    external: true
