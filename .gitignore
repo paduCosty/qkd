@@ -7,6 +7,8 @@
 /public/build/
 /public/hot
 /public/storage
+/bootstrap/cache/packages.php
+/bootstrap/cache/services.php
 /storage/
 .env
 .env.backup
