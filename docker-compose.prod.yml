@@ -12,7 +12,7 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=coolify"
+      - "traefik.docker.network=coolify-qkd"
       - "traefik.http.services.app.loadbalancer.server.port=81"
     environment:
       APP_ENV: production
@@ -21,7 +21,7 @@ services:
       APP_KEY: '${APP_KEY}'
       DB_CONNECTION: mysql
       DB_HOST: db
-      DB_PORT: 3306
+      DB_PORT: 3307
       DB_DATABASE: '${DB_DATABASE}'
       DB_USERNAME: '${DB_USERNAME}'
       DB_PASSWORD: '${DB_PASSWORD}'
