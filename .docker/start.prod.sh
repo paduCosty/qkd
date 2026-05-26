@@ -3,6 +3,21 @@ set -e
 
 cd /var/www/html
 
+echo "==> Creating storage directories..."
+mkdir -p \
+    storage/app/public \
+    storage/app/private \
+    storage/framework/cache/data \
+    storage/framework/sessions \
+    storage/framework/testing \
+    storage/framework/views \
+    storage/logs
+chown -R www-data:www-data storage
+chmod -R 775 storage
+
+echo "==> Linking storage..."
+php artisan storage:link --force
+
 echo "==> Discovering packages..."
 php artisan package:discover --ansi
 
