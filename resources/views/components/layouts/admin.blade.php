@@ -19,6 +19,58 @@
 </head>
 <body class="bg-surface text-content antialiased">
 
+    {{-- ── Global confirm modal ── --}}
+    <div x-data
+         x-show="$store.confirm.show"
+         x-transition:enter="transition ease-out duration-150"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-100"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         @keydown.escape.window="$store.confirm.cancel()"
+         class="fixed inset-0 z-[200] flex items-center justify-center px-4"
+         style="display:none">
+
+        {{-- Backdrop --}}
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="$store.confirm.cancel()"></div>
+
+        {{-- Modal --}}
+        <div x-show="$store.confirm.show"
+             x-transition:enter="transition ease-out duration-150"
+             x-transition:enter-start="opacity-0 scale-95"
+             x-transition:enter-end="opacity-100 scale-100"
+             x-transition:leave="transition ease-in duration-100"
+             x-transition:leave-start="opacity-100 scale-100"
+             x-transition:leave-end="opacity-0 scale-95"
+             class="relative bg-card border border-border rounded-2xl shadow-2xl shadow-black/50 w-full max-w-sm p-6">
+
+            {{-- Icon --}}
+            <div class="flex items-center justify-center w-12 h-12 rounded-full bg-red-500/10 border border-red-500/20 mx-auto mb-4">
+                <svg width="22" height="22" fill="none" stroke="#f87171" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                    <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+            </div>
+
+            {{-- Message --}}
+            <p class="text-center text-[14px] text-content font-medium mb-1" x-text="$store.confirm.message"></p>
+            <p class="text-center text-[12px] text-dim mb-6">Această acțiune nu poate fi anulată.</p>
+
+            {{-- Buttons --}}
+            <div class="flex gap-2.5">
+                <button @click="$store.confirm.cancel()"
+                        class="flex-1 bg-transparent border border-border text-dim text-[13px] font-medium py-2.5 rounded-xl cursor-pointer transition-colors hover:border-content/30 hover:text-content">
+                    Anulează
+                </button>
+                <button @click="$store.confirm.commit()"
+                        class="flex-1 bg-red-500/15 border border-red-500/30 text-red-400 text-[13px] font-bold py-2.5 rounded-xl cursor-pointer transition-colors hover:bg-red-500/25">
+                    Confirmă
+                </button>
+            </div>
+        </div>
+    </div>
+
     {{-- Sidebar (desktop only) --}}
     <aside class="hidden md:flex flex-col fixed inset-y-0 left-0 w-60 bg-card border-r border-border z-50 overflow-y-auto">
 

@@ -105,8 +105,7 @@
                                     <div x-show="mode === 'edit'" class="flex gap-1.5 shrink-0 ml-2">
                                         <button wire:click="startEditCategory({{ $category->id }})"
                                                 class="text-[11px] text-dim border border-border px-2 py-1 rounded-md bg-transparent cursor-pointer hover:text-content transition-colors">✎</button>
-                                        <button wire:click="deleteCategory({{ $category->id }})"
-                                                wire:confirm="Ștergi categoria '{{ $category->name_viet }}' și toate tehnicile din ea?"
+                                        <button @click="$store.confirm.open('Ștergi categoria {{ $category->name_viet }} și toate tehnicile din ea?', () => $wire.deleteCategory({{ $category->id }}))"
                                                 class="text-[11px] text-red-400 bg-red-500/8 border border-red-500/20 px-2 py-1 rounded-md cursor-pointer hover:bg-red-500/15 transition-colors">✕</button>
                                     </div>
                                 </div>
@@ -206,8 +205,7 @@
                                                     <div x-show="mode === 'edit'" class="flex gap-1 shrink-0">
                                                         <button wire:click="startEditTechnique({{ $technique->id }})"
                                                                 class="text-[11px] text-dim border border-border px-2 py-1 rounded-md bg-transparent cursor-pointer hover:text-content transition-colors">✎</button>
-                                                        <button wire:click="deleteTechnique({{ $technique->id }})"
-                                                                wire:confirm="Ștergi tehnica '{{ $technique->name_viet }}'?"
+                                                        <button @click="$store.confirm.open('Ștergi tehnica {{ $technique->name_viet }}?', () => $wire.deleteTechnique({{ $technique->id }}))"
                                                                 class="text-[11px] text-red-400 bg-red-500/8 border border-red-500/15 px-2 py-1 rounded-md cursor-pointer hover:bg-red-500/15 transition-colors">✕</button>
                                                     </div>
                                                 </div>

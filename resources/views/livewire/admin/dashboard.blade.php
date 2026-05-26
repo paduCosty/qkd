@@ -130,8 +130,7 @@
                                     @endforeach
                                 </select>
                                     @if(auth()->user()->is_owner)
-                                        <button wire:click="promoteToAdmin({{ $student->id }})"
-                                                wire:confirm="Promovezi {{ $student->name }} la antrenor?"
+                                        <button @click="$store.confirm.open('Promovezi {{ $student->name }} la antrenor?', () => $wire.promoteToAdmin({{ $student->id }}))"
                                                 class="mt-2 bg-gold/10 border border-gold/30 text-gold text-[11px] px-2.5 py-1.5 rounded-lg cursor-pointer transition-colors hover:bg-gold/20">
                                             Promovează antrenor
                                         </button>
@@ -226,8 +225,7 @@
                                             class="text-xs text-dim border border-border px-2.5 py-1.5 rounded-lg hover:text-content cursor-pointer bg-transparent transition-colors">
                                         ✎
                                     </button>
-                                    <button wire:click="deleteGrade({{ $grade->id }})"
-                                            wire:confirm="Ștergi gradul '{{ $grade->name }}' și toate tehnicile din el?"
+                                    <button @click="$store.confirm.open('Ștergi gradul {{ $grade->name }} și toate tehnicile din el?', () => $wire.deleteGrade({{ $grade->id }}))"
                                             class="text-xs text-red-400 bg-red-500/8 border border-red-500/20 px-2.5 py-1.5 rounded-lg hover:bg-red-500/15 cursor-pointer transition-colors">
                                         ✕
                                     </button>

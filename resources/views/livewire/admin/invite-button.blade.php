@@ -11,7 +11,7 @@
             </div>
             <input type="text" readonly value="{{ $link }}"
                    class="w-full bg-surface border border-border rounded px-2 py-1 text-[10px] text-gold font-mono mb-1.5 min-w-0">
-            <button @click="navigator.clipboard.writeText('{{ $link }}'); copied = true; setTimeout(() => copied = false, 2500)"
+            <button @click="(navigator.clipboard ? navigator.clipboard.writeText('{{ $link }}') : Promise.reject()).catch(() => {}); copied = true; setTimeout(() => copied = false, 2500)"
                     class="w-full text-[11px] font-bold py-1 rounded cursor-pointer transition-colors border-none"
                     :class="copied ? 'bg-emerald-500/20 text-emerald-400' : 'bg-gold/15 text-gold hover:bg-gold/25'">
                 <span x-show="!copied">Copiază link</span>
