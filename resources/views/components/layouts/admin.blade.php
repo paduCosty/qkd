@@ -110,6 +110,18 @@
                 </svg>
                 Programă
             </a>
+            <a href="{{ route('admin.stages') }}"
+                   class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-colors
+                          {{ request()->routeIs('admin.stages') ? 'bg-gold/10 text-gold font-semibold' : 'text-dim hover:bg-white/4 hover:text-content' }}">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                Stagii
+            </a>
+            <a href="{{ route('admin.exams') }}"
+                   class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-colors
+                          {{ request()->routeIs('admin.exams') ? 'bg-gold/10 text-gold font-semibold' : 'text-dim hover:bg-white/4 hover:text-content' }}">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                Examene
+            </a>
             <a href="{{ route('coaches') }}"
                class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-colors
                       {{ request()->routeIs('coaches') ? 'bg-gold/10 text-gold font-semibold' : 'text-dim hover:bg-white/4 hover:text-content' }}">

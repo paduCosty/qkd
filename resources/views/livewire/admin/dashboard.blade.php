@@ -80,7 +80,13 @@
                                         {{ strtoupper(substr($student->name, 0, 1)) }}
                                     </div>
                                     <div>
-                                        <div class="font-semibold text-[14px]">{{ $student->name }}</div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="font-semibold text-[14px]">{{ $student->name }}</span>
+                                            <a href="{{ route('admin.student.profile', $student) }}"
+                                               class="text-[11px] text-dim hover:text-gold transition-colors border border-border hover:border-gold/30 px-2 py-0.5 rounded-md no-underline shrink-0">
+                                                Profil
+                                            </a>
+                                        </div>
                                         <div class="text-xs text-dim">{{ $student->email }} · {{ $student->created_at->diffForHumans() }}</div>
                                     </div>
                                 </div>
@@ -116,7 +122,13 @@
                                         {{ strtoupper(substr($student->name, 0, 1)) }}
                                     </div>
                                     <div>
-                                        <div class="font-semibold text-[14px]">{{ $student->name }}</div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="font-semibold text-[14px]">{{ $student->name }}</span>
+                                            <a href="{{ route('admin.student.profile', $student) }}"
+                                               class="text-[11px] text-dim hover:text-gold transition-colors border border-border hover:border-gold/30 px-2 py-0.5 rounded-md no-underline shrink-0">
+                                                Profil
+                                            </a>
+                                        </div>
                                         <div class="text-xs text-dim">{{ $student->email }}</div>
                                     </div>
                                 </div>

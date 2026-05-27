@@ -1,4 +1,4 @@
-<div>
+<div x-data="{ tab: 'materie', filter: 'all' }">
 
     {{-- Topbar --}}
     <div class="bg-card border-b border-border px-5 py-3.5 flex items-center justify-between sticky top-0 z-50">
@@ -32,11 +32,38 @@
         </form>
     </div>
 
-    {{-- Body --}}
-    <div x-data="{ filter: 'all' }" class="flex flex-col md:flex-row">
+    {{-- Tab bar --}}
+    <div class="flex bg-card border-b border-border px-4 gap-1">
+        <button @click="tab = 'materie'"
+                :class="tab === 'materie' ? 'text-gold border-b-2 border-gold' : 'text-dim hover:text-content border-b-2 border-transparent'"
+                class="px-3 py-3 text-[13px] font-semibold cursor-pointer bg-transparent border-none transition-colors">
+            Materie
+        </button>
+        <button @click="tab = 'stagii'"
+                :class="tab === 'stagii' ? 'text-gold border-b-2 border-gold' : 'text-dim hover:text-content border-b-2 border-transparent'"
+                class="px-3 py-3 text-[13px] font-semibold cursor-pointer bg-transparent border-none transition-colors flex items-center gap-1.5">
+            Stagii
+            @if($upcomingStages->isNotEmpty())
+                <span class="text-[10px] bg-gold/15 text-gold px-1.5 py-0.5 rounded-full">{{ $upcomingStages->count() }}</span>
+            @endif
+        </button>
+        <button @click="tab = 'examene'"
+                :class="tab === 'examene' ? 'text-gold border-b-2 border-gold' : 'text-dim hover:text-content border-b-2 border-transparent'"
+                class="px-3 py-3 text-[13px] font-semibold cursor-pointer bg-transparent border-none transition-colors flex items-center gap-1.5">
+            Examene
+            @if($upcomingExams->isNotEmpty())
+                <span class="text-[10px] bg-gold/15 text-gold px-1.5 py-0.5 rounded-full">{{ $upcomingExams->count() }}</span>
+            @endif
+        </button>
+    </div>
+
+    {{-- ══════════════════════════════════════════════════════════════════════ --}}
+    {{-- MATERIE TAB                                                           --}}
+    {{-- ══════════════════════════════════════════════════════════════════════ --}}
+    <div x-show="tab === 'materie'" class="flex flex-col md:flex-row">
 
         {{-- Left column --}}
-        <div class="md:w-[340px] md:shrink-0 p-5 md:p-6 md:border-r md:border-border md:sticky md:top-[69px] md:h-[calc(100vh-69px)] md:overflow-y-auto">
+        <div class="md:w-[340px] md:shrink-0 p-5 md:p-6 md:border-r md:border-border md:sticky md:top-[105px] md:h-[calc(100vh-105px)] md:overflow-y-auto">
 
             {{-- Stats --}}
             <div class="grid grid-cols-3 gap-2.5 mb-5">
@@ -119,7 +146,6 @@
                      x-data="{ open: {{ $isCurrentGrade ? 'true' : 'false' }} }"
                      class="bg-card border border-border rounded-xl mb-2 overflow-hidden">
 
-                    {{-- Grade header --}}
                     <div @click="open = !open" class="px-4 py-3.5 flex items-center justify-between cursor-pointer select-none">
                         <div class="flex items-center gap-3">
                             @if($grade->order === 0)
@@ -150,7 +176,6 @@
                         </div>
                     </div>
 
-                    {{-- Grade body --}}
                     <div x-show="open"
                          x-transition:enter="transition ease-out duration-150"
                          x-transition:enter-start="opacity-0"
@@ -178,7 +203,6 @@
                                              x-show="filter === 'all' || $el.dataset.status === filter"
                                              class="bg-card-2 rounded-lg overflow-hidden {{ $isForm ? 'border border-gold/10' : 'border border-border' }}">
 
-                                            {{-- Row --}}
                                             <div @click="{{ $hasDetail ? 'open = !open' : '' }}"
                                                  class="flex items-center gap-2 px-2.5 py-1.5 {{ $hasDetail ? 'cursor-pointer hover:bg-white/2' : '' }} transition-colors">
 
@@ -223,7 +247,6 @@
                                                 </button>
                                             </div>
 
-                                            {{-- Detail panel --}}
                                             @if($hasDetail)
                                                 <div x-show="open" x-transition class="border-t border-border px-3 py-2.5 flex flex-col gap-2">
                                                     @if($technique->description)
@@ -269,11 +292,195 @@
                 </div>
             @empty
                 <div class="bg-card border border-border rounded-xl p-8 text-center">
-                    <p class="text-dim text-sm">Niciun grad adăugat încă. Antrenorul va adăuga materia în curând.</p>
+                    <p class="text-dim text-sm">Niciun grad disponibil încă.</p>
                 </div>
             @endforelse
 
         </div>
+    </div>
+
+    {{-- ══════════════════════════════════════════════════════════════════════ --}}
+    {{-- STAGII TAB                                                            --}}
+    {{-- ══════════════════════════════════════════════════════════════════════ --}}
+    <div x-show="tab === 'stagii'" class="max-w-2xl mx-auto px-5 py-6 pb-24">
+
+        {{-- Upcoming stages --}}
+        <p class="text-[11px] uppercase tracking-[1.5px] text-dim font-semibold mb-3">Stagii viitoare</p>
+
+        @if($upcomingStages->isEmpty())
+            <div class="bg-card border border-border rounded-xl p-6 text-center mb-8">
+                <p class="text-dim text-sm">Niciun stagiu programat momentan.</p>
+            </div>
+        @else
+            <div class="flex flex-col gap-2 mb-8">
+                @foreach($upcomingStages as $stage)
+                    @php $myStatus = $myStageEnrollments[$stage->id] ?? null; @endphp
+                    <div wire:key="us-{{ $stage->id }}"
+                         class="bg-card border border-border rounded-xl px-4 py-4">
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="flex-1 min-w-0">
+                                <div class="font-semibold text-[15px] text-content">{{ $stage->title }}</div>
+                                <div class="flex items-center gap-3 mt-1.5 flex-wrap">
+                                    <span class="text-[12px] text-gold font-medium">
+                                        <svg class="inline -mt-0.5 mr-0.5" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                        {{ $stage->date->format('d M Y') }}
+                                    </span>
+                                    @if($stage->location)
+                                        <span class="text-[12px] text-dim">📍 {{ $stage->location }}</span>
+                                    @endif
+                                </div>
+                                @if($stage->registration_deadline)
+                                    <div class="text-[11px] text-dim mt-1">
+                                        Înscrieri până la {{ $stage->registration_deadline->format('d M Y') }}
+                                    </div>
+                                @endif
+                                @if($stage->description)
+                                    <p class="text-[13px] text-dim mt-2 leading-relaxed">{{ $stage->description }}</p>
+                                @endif
+                            </div>
+
+                            <div class="shrink-0 mt-0.5">
+                                @if($myStatus === 'accepted')
+                                    <span class="text-[12px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/25 px-3 py-1.5 rounded-lg block text-center">✓ Acceptat</span>
+                                @elseif($myStatus === 'pending')
+                                    <span class="text-[12px] text-amber-400 bg-amber-400/10 border border-amber-400/25 px-3 py-1.5 rounded-lg block text-center">În așteptare</span>
+                                @elseif($myStatus === 'rejected')
+                                    <span class="text-[12px] text-red-400 bg-red-500/8 border border-red-500/20 px-3 py-1.5 rounded-lg block text-center">Respins</span>
+                                @elseif($stage->registrationOpen())
+                                    <button wire:click="registerStage({{ $stage->id }})"
+                                            class="text-[12px] font-semibold text-[#08080e] bg-gold hover:bg-gold-light px-3 py-1.5 rounded-lg cursor-pointer border-none transition-colors block">
+                                        Mă înscriu
+                                    </button>
+                                @else
+                                    <span class="text-[12px] text-dim px-3 py-1.5 block">Înscrieri închise</span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @endif
+
+        {{-- Stage history --}}
+        <div class="flex items-center justify-between mb-3">
+            <p class="text-[11px] uppercase tracking-[1.5px] text-dim font-semibold">Stagii la care am participat</p>
+            <span class="text-[12px] text-gold font-semibold">{{ $stageHistory->count() }}</span>
+        </div>
+
+        @if($stageHistory->isEmpty())
+            <div class="bg-card border border-border rounded-xl p-6 text-center">
+                <p class="text-dim text-sm">Niciun stagiu în istoric.</p>
+            </div>
+        @else
+            <div class="flex flex-col gap-2">
+                @foreach($stageHistory as $enrollment)
+                    <div class="bg-card border border-border rounded-xl px-4 py-3 flex items-center justify-between">
+                        <div>
+                            <div class="font-medium text-[14px] text-content">{{ $enrollment->stage->title }}</div>
+                            <div class="text-[12px] text-dim mt-0.5">
+                                {{ $enrollment->stage->date->format('d M Y') }}
+                                @if($enrollment->stage->location) · {{ $enrollment->stage->location }} @endif
+                            </div>
+                        </div>
+                        <span class="text-[11px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/25 px-2.5 py-1 rounded-full shrink-0">✓</span>
+                    </div>
+                @endforeach
+            </div>
+        @endif
+
+    </div>
+
+    {{-- ══════════════════════════════════════════════════════════════════════ --}}
+    {{-- EXAMENE TAB                                                           --}}
+    {{-- ══════════════════════════════════════════════════════════════════════ --}}
+    <div x-show="tab === 'examene'" class="max-w-2xl mx-auto px-5 py-6 pb-24">
+
+        {{-- Upcoming exams --}}
+        <p class="text-[11px] uppercase tracking-[1.5px] text-dim font-semibold mb-3">Examene viitoare</p>
+
+        @if($upcomingExams->isEmpty())
+            <div class="bg-card border border-border rounded-xl p-6 text-center mb-8">
+                <p class="text-dim text-sm">Niciun examen programat momentan.</p>
+            </div>
+        @else
+            <div class="flex flex-col gap-2 mb-8">
+                @foreach($upcomingExams as $exam)
+                    @php $myExamStatus = $myExamEnrollments[$exam->id] ?? null; @endphp
+                    <div wire:key="ue-{{ $exam->id }}"
+                         class="bg-card border border-border rounded-xl px-4 py-4">
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="flex-1 min-w-0">
+                                <div class="font-semibold text-[15px] text-content">{{ $exam->title }}</div>
+                                <div class="flex items-center gap-3 mt-1.5 flex-wrap">
+                                    <span class="text-[12px] text-gold font-medium">{{ $exam->date->format('d M Y') }}</span>
+                                    @if($exam->grade)
+                                        <span class="text-[11px] text-dim bg-gold/6 border border-gold/15 px-2 py-0.5 rounded">
+                                            Grad vizat: {{ $exam->grade->name }}
+                                        </span>
+                                    @endif
+                                    @if($exam->location)
+                                        <span class="text-[12px] text-dim">📍 {{ $exam->location }}</span>
+                                    @endif
+                                </div>
+                                @if($exam->notes)
+                                    <p class="text-[13px] text-dim mt-2 leading-relaxed">{{ $exam->notes }}</p>
+                                @endif
+                            </div>
+
+                            <div class="shrink-0 mt-0.5">
+                                @if($myExamStatus === 'accepted')
+                                    <span class="text-[12px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/25 px-3 py-1.5 rounded-lg block text-center">✓ Acceptat</span>
+                                @elseif($myExamStatus === 'pending')
+                                    <span class="text-[12px] text-amber-400 bg-amber-400/10 border border-amber-400/25 px-3 py-1.5 rounded-lg block text-center">În așteptare</span>
+                                @elseif($myExamStatus === 'rejected')
+                                    <span class="text-[12px] text-red-400 bg-red-500/8 border border-red-500/20 px-3 py-1.5 rounded-lg block text-center">Respins</span>
+                                @else
+                                    <button wire:click="registerExam({{ $exam->id }})"
+                                            class="text-[12px] font-semibold text-[#08080e] bg-gold hover:bg-gold-light px-3 py-1.5 rounded-lg cursor-pointer border-none transition-colors block">
+                                        Mă înscriu
+                                    </button>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @endif
+
+        {{-- Exam history --}}
+        <div class="flex items-center justify-between mb-3">
+            <p class="text-[11px] uppercase tracking-[1.5px] text-dim font-semibold">Istoricul examenelor</p>
+            <span class="text-[12px] text-gold font-semibold">{{ $examHistory->count() }}</span>
+        </div>
+
+        @if($examHistory->isEmpty())
+            <div class="bg-card border border-border rounded-xl p-6 text-center">
+                <p class="text-dim text-sm">Niciun examen susținut.</p>
+            </div>
+        @else
+            <div class="flex flex-col gap-2">
+                @foreach($examHistory as $reg)
+                    <div class="bg-card border border-border rounded-xl px-4 py-3 flex items-center justify-between">
+                        <div>
+                            <div class="font-medium text-[14px] text-content">{{ $reg->exam->title }}</div>
+                            <div class="text-[12px] text-dim mt-0.5">
+                                {{ $reg->exam->date->format('d M Y') }}
+                                @if($reg->exam->grade) · → {{ $reg->exam->grade->name }} @endif
+                            </div>
+                        </div>
+                        @if($reg->result === 'passed')
+                            <span class="text-[11px] text-gold bg-gold/10 border border-gold/25 px-2.5 py-1 rounded-full shrink-0">🏅 Promovat</span>
+                        @elseif($reg->result === 'failed')
+                            <span class="text-[11px] text-dim bg-card-2 border border-border px-2.5 py-1 rounded-full shrink-0">Nepromovat</span>
+                        @elseif($reg->status === 'accepted')
+                            <span class="text-[11px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/25 px-2.5 py-1 rounded-full shrink-0">Acceptat</span>
+                        @else
+                            <span class="text-[11px] text-amber-400 bg-amber-400/10 border border-amber-400/25 px-2.5 py-1 rounded-full shrink-0">{{ ucfirst($reg->status) }}</span>
+                        @endif
+                    </div>
+                @endforeach
+            </div>
+        @endif
 
     </div>
 

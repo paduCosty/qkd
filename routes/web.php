@@ -43,4 +43,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/dashboard',        App\Livewire\Admin\Dashboard::class)->name('dashboard');
     Route::get('/curriculum',       App\Livewire\Admin\Curriculum::class)->name('curriculum');
     Route::get('/grades/{grade}',   App\Livewire\Admin\ManageGrade::class)->name('grades.manage');
+    Route::get('/stagii',           App\Livewire\Admin\Stages::class)->name('stages');
+    Route::get('/examene',          App\Livewire\Admin\Exams::class)->name('exams');
+    Route::get('/elevi/{student}',  App\Livewire\Admin\StudentProfile::class)->name('student.profile');
 });
