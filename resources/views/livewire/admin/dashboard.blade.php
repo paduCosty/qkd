@@ -148,31 +148,6 @@
 
         </div>
 
-            {{-- ── INVITAȚIE ANTRENOR ── --}}
-            <div id="invite" class="mt-4 bg-card border border-border rounded-xl px-4 py-4">
-                <div class="flex items-center justify-between flex-wrap gap-3">
-                    <div>
-                        <p class="text-[13px] font-semibold">Invită un antrenor</p>
-                        <p class="text-[11px] text-dim mt-0.5">Generează un link unic, valabil 48h</p>
-                    </div>
-                    <button wire:click="generateInvite"
-                            class="bg-gold/10 border border-gold/30 text-gold text-[13px] font-semibold px-4 py-2 rounded-lg cursor-pointer transition-colors hover:bg-gold/20">
-                        Generează link
-                    </button>
-                </div>
-                @if($inviteLink)
-                    <div x-data="{ copied: false }" class="mt-3 flex items-center gap-2">
-                        <input type="text" readonly value="{{ $inviteLink }}"
-                               class="flex-1 bg-surface border border-gold/30 rounded-lg px-3 py-2 text-[12px] text-gold font-mono min-w-0">
-                        <button @click="navigator.clipboard.writeText('{{ $inviteLink }}'); copied = true; setTimeout(() => copied = false, 2000)"
-                                class="bg-gold text-[#08080e] font-bold text-[12px] px-3 py-2 rounded-lg cursor-pointer shrink-0 hover:bg-gold-light">
-                            <span x-show="!copied">Copiază</span>
-                            <span x-show="copied">Copiat!</span>
-                        </button>
-                    </div>
-                    <p class="text-[10px] text-dim mt-1.5">Link valid 48 de ore, o singură utilizare.</p>
-                @endif
-            </div>
 
         {{-- ── CURRICULĂ TAB ── --}}
         <div x-show="tab === 'curricula'">
