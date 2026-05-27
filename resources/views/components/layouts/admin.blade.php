@@ -16,6 +16,29 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
+    <script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.store('confirm', {
+            show: false,
+            message: '',
+            _action: null,
+            open(message, action) {
+                this.message = message;
+                this._action = action;
+                this.show = true;
+            },
+            commit() {
+                if (this._action) this._action();
+                this.show = false;
+                this._action = null;
+            },
+            cancel() {
+                this.show = false;
+                this._action = null;
+            },
+        });
+    });
+    </script>
 </head>
 <body class="bg-surface text-content antialiased">
 
@@ -232,29 +255,6 @@
         {{ $slot }}
     </div>
 
-    <script>
-    document.addEventListener('alpine:init', () => {
-        Alpine.store('confirm', {
-            show: false,
-            message: '',
-            _action: null,
-            open(message, action) {
-                this.message = message;
-                this._action = action;
-                this.show = true;
-            },
-            commit() {
-                if (this._action) this._action();
-                this.show = false;
-                this._action = null;
-            },
-            cancel() {
-                this.show = false;
-                this._action = null;
-            },
-        });
-    });
-    </script>
     @livewireScripts
 </body>
 </html>
