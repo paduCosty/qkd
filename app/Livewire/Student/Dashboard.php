@@ -67,7 +67,7 @@ class Dashboard extends Component
     {
         $user = auth()->user()->load('currentGrade');
 
-        $maxOrder = $user->currentGrade?->order ?? 0;
+        $maxOrder = $user->currentGrade?->order ?? Grade::orderBy('order')->value('order') ?? 0;
 
         $grades = Grade::with([
             'categories' => fn ($q) => $q->orderBy('order')
