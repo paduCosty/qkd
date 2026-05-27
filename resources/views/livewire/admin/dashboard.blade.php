@@ -55,7 +55,7 @@
             <button @click="tab = 'curricula'; window.location.hash = 'curricula'"
                     :class="tab === 'curricula' ? 'bg-gold text-[#08080e] font-bold' : 'text-dim font-medium hover:text-content'"
                     class="flex-1 py-2 text-[13px] rounded-lg border-none cursor-pointer transition-colors">
-                Grade
+                Programă
             </button>
         </div>
 

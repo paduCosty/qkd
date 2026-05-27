@@ -3,7 +3,7 @@
     {{-- Topbar --}}
     <div class="bg-card border-b border-border px-5 py-3.5 flex items-center justify-between sticky top-0 z-50">
         <div>
-            <h2 class="font-[family-name:var(--font-display)] text-[15px] font-bold text-gold tracking-[2px] leading-tight">CURRICULĂ</h2>
+            <h2 class="font-[family-name:var(--font-display)] text-[15px] font-bold text-gold tracking-[2px] leading-tight">PROGRAMĂ</h2>
             <p class="text-xs text-dim mt-0.5">
                 {{ $grades->count() }} grade · {{ $grades->sum(fn($g) => $g->categories->sum(fn($c) => $c->techniques->count())) }} tehnici
             </p>
@@ -81,19 +81,21 @@
 
                             {{-- Category header --}}
                             @if($editCatId === $category->id)
-                                <div class="flex gap-2 items-center flex-wrap mb-2">
-                                    <input wire:model="editCatNameViet" type="text"
-                                           class="flex-1 min-w-28 bg-surface border border-gold rounded-lg px-2.5 py-1.5 text-gold text-xs font-bold uppercase tracking-wide">
-                                    <input wire:model="editCatNameRo" type="text"
-                                           class="flex-1 min-w-36 bg-surface border border-border rounded-lg px-2.5 py-1.5 text-content text-xs">
-                                    <button wire:click="saveCategory"
-                                            class="px-3 py-1.5 bg-gold hover:bg-gold-light text-[#08080e] font-bold text-xs rounded-lg cursor-pointer border-none transition-colors">
-                                        OK
-                                    </button>
-                                    <button wire:click="$set('editCatId', null)"
-                                            class="px-2.5 py-1.5 bg-transparent border border-border text-dim text-xs rounded-lg cursor-pointer hover:text-content transition-colors">
-                                        ✕
-                                    </button>
+                                <div class="flex flex-col gap-2 mb-2">
+                                    <input wire:model="editCatNameViet" type="text" placeholder="Denumire vietnameză"
+                                           class="w-full bg-surface border border-gold rounded-xl px-3.5 py-3 text-gold text-[13px] font-bold uppercase tracking-wide">
+                                    <input wire:model="editCatNameRo" type="text" placeholder="Traducere română"
+                                           class="w-full bg-surface border border-border rounded-xl px-3.5 py-3 text-content text-[13px]">
+                                    <div class="flex gap-2">
+                                        <button wire:click="saveCategory"
+                                                class="px-5 py-2.5 bg-gold hover:bg-gold-light text-[#08080e] font-bold text-[13px] rounded-xl cursor-pointer border-none transition-colors">
+                                            Salvează
+                                        </button>
+                                        <button wire:click="$set('editCatId', null)"
+                                                class="px-4 py-2.5 bg-transparent border border-border text-dim text-[13px] rounded-xl cursor-pointer hover:text-content transition-colors">
+                                            Anulează
+                                        </button>
+                                    </div>
                                 </div>
                             @else
                                 <div class="flex items-center justify-between mb-2">
@@ -125,56 +127,56 @@
                                     <div wire:key="tech-{{ $technique->id }}">
 
                                         @if($editTechId === $technique->id)
-                                            <div class="bg-surface border border-gold/30 rounded-xl p-3 mb-1">
-                                                <div class="grid grid-cols-2 gap-2 mb-2">
+                                            <div class="bg-surface border border-gold/30 rounded-xl p-4 mb-1 flex flex-col gap-3">
+                                                <div class="flex flex-col gap-2.5">
                                                     <input wire:model="editTechNameViet" type="text" placeholder="Denumire vietnameză"
-                                                           class="bg-card border border-border rounded-lg px-2.5 py-1.5 text-gold text-xs font-bold uppercase tracking-wide w-full">
+                                                           class="w-full bg-card border border-border rounded-xl px-3.5 py-3 text-gold text-[13px] font-bold uppercase tracking-wide">
                                                     <input wire:model="editTechNameRo" type="text" placeholder="Traducere română"
-                                                           class="bg-card border border-border rounded-lg px-2.5 py-1.5 text-content text-xs w-full">
+                                                           class="w-full bg-card border border-border rounded-xl px-3.5 py-3 text-content text-[13px]">
                                                 </div>
-                                                <div class="flex gap-2 mb-2 flex-wrap">
-                                                    <label class="flex items-center gap-1.5 cursor-pointer text-xs px-2.5 py-1.5 rounded-lg border transition-colors {{ $editTechType === 'simple' ? 'border-gold/40 bg-gold/8 text-gold' : 'border-border text-dim' }}">
+                                                <div class="flex gap-2 flex-wrap">
+                                                    <label class="flex items-center gap-1.5 cursor-pointer text-[13px] px-3.5 py-2.5 rounded-xl border transition-colors {{ $editTechType === 'simple' ? 'border-gold/40 bg-gold/8 text-gold' : 'border-border text-dim' }}">
                                                         <input wire:model="editTechType" type="radio" value="simple" class="sr-only"> Simplă
                                                     </label>
-                                                    <label class="flex items-center gap-1.5 cursor-pointer text-xs px-2.5 py-1.5 rounded-lg border transition-colors {{ $editTechType === 'form' ? 'border-gold/40 bg-gold/8 text-gold' : 'border-border text-dim' }}">
+                                                    <label class="flex items-center gap-1.5 cursor-pointer text-[13px] px-3.5 py-2.5 rounded-xl border transition-colors {{ $editTechType === 'form' ? 'border-gold/40 bg-gold/8 text-gold' : 'border-border text-dim' }}">
                                                         <input wire:model="editTechType" type="radio" value="form" class="sr-only"> Formă
                                                     </label>
                                                 </div>
                                                 {{-- Video --}}
-                                                <div class="mb-2">
-                                                    <div class="flex bg-surface border border-border rounded-lg p-0.5 gap-0.5 mb-1.5 w-fit">
+                                                <div>
+                                                    <div class="flex bg-surface border border-border rounded-lg p-0.5 gap-0.5 mb-2 w-fit">
                                                         <button type="button" wire:click="$set('editVideoTab','url')"
-                                                                class="px-3 py-1 text-[11px] font-semibold rounded-md border-none cursor-pointer transition-colors {{ $editVideoTab === 'url' ? 'bg-card-2 text-content' : 'bg-transparent text-dim hover:text-content' }}">
+                                                                class="px-3 py-1.5 text-[12px] font-semibold rounded-md border-none cursor-pointer transition-colors {{ $editVideoTab === 'url' ? 'bg-card-2 text-content' : 'bg-transparent text-dim hover:text-content' }}">
                                                             YouTube URL
                                                         </button>
                                                         <button type="button" wire:click="$set('editVideoTab','upload')"
-                                                                class="px-3 py-1 text-[11px] font-semibold rounded-md border-none cursor-pointer transition-colors {{ $editVideoTab === 'upload' ? 'bg-card-2 text-content' : 'bg-transparent text-dim hover:text-content' }}">
+                                                                class="px-3 py-1.5 text-[12px] font-semibold rounded-md border-none cursor-pointer transition-colors {{ $editVideoTab === 'upload' ? 'bg-card-2 text-content' : 'bg-transparent text-dim hover:text-content' }}">
                                                             Fișier video
                                                         </button>
                                                     </div>
                                                     @if($editVideoTab === 'url')
                                                         <input wire:model="editTechVideo" type="url" placeholder="https://youtube.com/watch?v=..."
-                                                               class="w-full bg-card border border-border rounded-lg px-2.5 py-1.5 text-content text-xs">
+                                                               class="w-full bg-card border border-border rounded-xl px-3.5 py-3 text-content text-[13px]">
                                                     @else
                                                         <input wire:model="editTechFile" type="file" accept="video/mp4,video/webm,video/quicktime"
-                                                               class="w-full text-xs text-dim file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-none file:text-xs file:font-semibold file:bg-gold/12 file:text-gold file:cursor-pointer hover:file:bg-gold/20 cursor-pointer">
+                                                               class="w-full text-[13px] text-dim file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-none file:text-[12px] file:font-semibold file:bg-gold/12 file:text-gold file:cursor-pointer hover:file:bg-gold/20 cursor-pointer">
                                                         @if($editTechVideo && !$editTechFile)
-                                                            <p class="text-[10px] text-amber-400/80 mt-1">Video curent: {{ basename($editTechVideo) }}</p>
+                                                            <p class="text-[11px] text-amber-400/80 mt-1">Video curent: {{ basename($editTechVideo) }}</p>
                                                         @endif
-                                                        <p class="text-[10px] text-dim mt-0.5">MP4, WebM sau MOV · max 200 MB</p>
+                                                        <p class="text-[11px] text-dim mt-1">MP4, WebM sau MOV · max 200 MB</p>
                                                     @endif
                                                 </div>
                                                 <textarea wire:model="editTechDesc" rows="2" placeholder="Descriere (opțional)"
-                                                          class="w-full bg-card border border-border rounded-lg px-2.5 py-1.5 text-content text-xs resize-y leading-relaxed mb-2"></textarea>
+                                                          class="w-full bg-card border border-border rounded-xl px-3.5 py-3 text-content text-[13px] resize-y leading-relaxed"></textarea>
                                                 <textarea wire:model="editTechNote" rows="2" placeholder="Notă antrenor (opțional)"
-                                                          class="w-full bg-card border border-border rounded-lg px-2.5 py-1.5 text-content text-xs resize-y leading-relaxed mb-3"></textarea>
+                                                          class="w-full bg-card border border-border rounded-xl px-3.5 py-3 text-content text-[13px] resize-y leading-relaxed"></textarea>
                                                 <div class="flex gap-2">
                                                     <button wire:click="saveTechnique"
-                                                            class="px-3.5 py-1.5 bg-gold hover:bg-gold-light text-[#08080e] font-bold text-xs rounded-lg cursor-pointer border-none transition-colors">
+                                                            class="px-5 py-2.5 bg-gold hover:bg-gold-light text-[#08080e] font-bold text-[13px] rounded-xl cursor-pointer border-none transition-colors">
                                                         Salvează
                                                     </button>
                                                     <button wire:click="$set('editTechId', null)"
-                                                            class="px-2.5 py-1.5 bg-transparent border border-border text-dim text-xs rounded-lg cursor-pointer hover:text-content transition-colors">
+                                                            class="px-4 py-2.5 bg-transparent border border-border text-dim text-[13px] rounded-xl cursor-pointer hover:text-content transition-colors">
                                                         Anulează
                                                     </button>
                                                 </div>
@@ -261,53 +263,53 @@
                                 {{-- Add technique (edit mode) --}}
                                 <div x-show="mode === 'edit'">
                                     @if($addTechCatId === $category->id)
-                                        <div class="bg-surface border border-gold/25 rounded-xl p-3 mt-1">
-                                            <div class="grid grid-cols-2 gap-2 mb-2">
+                                        <div class="bg-surface border border-gold/25 rounded-xl p-4 mt-1 flex flex-col gap-3">
+                                            <div class="flex flex-col gap-2.5">
                                                 <input wire:model="techNameViet" type="text" placeholder="Denumire vietnameză"
-                                                       class="bg-card border border-border rounded-lg px-2.5 py-1.5 text-gold text-xs font-bold uppercase tracking-wide w-full">
+                                                       class="w-full bg-card border border-border rounded-xl px-3.5 py-3 text-gold text-[13px] font-bold uppercase tracking-wide">
                                                 <input wire:model="techNameRo" type="text" placeholder="Traducere română"
-                                                       class="bg-card border border-border rounded-lg px-2.5 py-1.5 text-content text-xs w-full">
+                                                       class="w-full bg-card border border-border rounded-xl px-3.5 py-3 text-content text-[13px]">
                                             </div>
-                                            <div class="flex gap-2 mb-2 flex-wrap">
-                                                <label class="flex items-center gap-1.5 cursor-pointer text-xs px-2.5 py-1.5 rounded-lg border transition-colors {{ $techType === 'simple' ? 'border-gold/40 bg-gold/8 text-gold' : 'border-border text-dim' }}">
+                                            <div class="flex gap-2 flex-wrap">
+                                                <label class="flex items-center gap-1.5 cursor-pointer text-[13px] px-3.5 py-2.5 rounded-xl border transition-colors {{ $techType === 'simple' ? 'border-gold/40 bg-gold/8 text-gold' : 'border-border text-dim' }}">
                                                     <input wire:model="techType" type="radio" value="simple" class="sr-only"> Simplă
                                                 </label>
-                                                <label class="flex items-center gap-1.5 cursor-pointer text-xs px-2.5 py-1.5 rounded-lg border transition-colors {{ $techType === 'form' ? 'border-gold/40 bg-gold/8 text-gold' : 'border-border text-dim' }}">
+                                                <label class="flex items-center gap-1.5 cursor-pointer text-[13px] px-3.5 py-2.5 rounded-xl border transition-colors {{ $techType === 'form' ? 'border-gold/40 bg-gold/8 text-gold' : 'border-border text-dim' }}">
                                                     <input wire:model="techType" type="radio" value="form" class="sr-only"> Formă
                                                 </label>
                                             </div>
                                             {{-- Video --}}
-                                            <div class="mb-2">
-                                                <div class="flex bg-surface border border-border rounded-lg p-0.5 gap-0.5 mb-1.5 w-fit">
+                                            <div>
+                                                <div class="flex bg-surface border border-border rounded-lg p-0.5 gap-0.5 mb-2 w-fit">
                                                     <button type="button" wire:click="$set('addVideoTab','url')"
-                                                            class="px-3 py-1 text-[11px] font-semibold rounded-md border-none cursor-pointer transition-colors {{ $addVideoTab === 'url' ? 'bg-card-2 text-content' : 'bg-transparent text-dim hover:text-content' }}">
+                                                            class="px-3 py-1.5 text-[12px] font-semibold rounded-md border-none cursor-pointer transition-colors {{ $addVideoTab === 'url' ? 'bg-card-2 text-content' : 'bg-transparent text-dim hover:text-content' }}">
                                                         YouTube URL
                                                     </button>
                                                     <button type="button" wire:click="$set('addVideoTab','upload')"
-                                                            class="px-3 py-1 text-[11px] font-semibold rounded-md border-none cursor-pointer transition-colors {{ $addVideoTab === 'upload' ? 'bg-card-2 text-content' : 'bg-transparent text-dim hover:text-content' }}">
+                                                            class="px-3 py-1.5 text-[12px] font-semibold rounded-md border-none cursor-pointer transition-colors {{ $addVideoTab === 'upload' ? 'bg-card-2 text-content' : 'bg-transparent text-dim hover:text-content' }}">
                                                         Fișier video
                                                     </button>
                                                 </div>
                                                 @if($addVideoTab === 'url')
                                                     <input wire:model="techVideoUrl" type="url" placeholder="https://youtube.com/watch?v=..."
-                                                           class="w-full bg-card border border-border rounded-lg px-2.5 py-1.5 text-content text-xs">
+                                                           class="w-full bg-card border border-border rounded-xl px-3.5 py-3 text-content text-[13px]">
                                                 @else
                                                     <input wire:model="techVideoFile" type="file" accept="video/mp4,video/webm,video/quicktime"
-                                                           class="w-full text-xs text-dim file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-none file:text-xs file:font-semibold file:bg-gold/12 file:text-gold file:cursor-pointer hover:file:bg-gold/20 cursor-pointer">
-                                                    <p class="text-[10px] text-dim mt-0.5">MP4, WebM sau MOV · max 200 MB</p>
+                                                           class="w-full text-[13px] text-dim file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-none file:text-[12px] file:font-semibold file:bg-gold/12 file:text-gold file:cursor-pointer hover:file:bg-gold/20 cursor-pointer">
+                                                    <p class="text-[11px] text-dim mt-1">MP4, WebM sau MOV · max 200 MB</p>
                                                 @endif
                                             </div>
                                             <textarea wire:model="techDescription" rows="2" placeholder="Descriere (opțional)"
-                                                      class="w-full bg-card border border-border rounded-lg px-2.5 py-1.5 text-content text-xs resize-y leading-relaxed mb-2"></textarea>
+                                                      class="w-full bg-card border border-border rounded-xl px-3.5 py-3 text-content text-[13px] resize-y leading-relaxed"></textarea>
                                             <textarea wire:model="techCoachNote" rows="2" placeholder="Notă antrenor (opțional)"
-                                                      class="w-full bg-card border border-border rounded-lg px-2.5 py-1.5 text-content text-xs resize-y leading-relaxed mb-3"></textarea>
+                                                      class="w-full bg-card border border-border rounded-xl px-3.5 py-3 text-content text-[13px] resize-y leading-relaxed"></textarea>
                                             <div class="flex gap-2">
                                                 <button wire:click="addTechnique"
-                                                        class="px-3.5 py-1.5 bg-gold hover:bg-gold-light text-[#08080e] font-bold text-xs rounded-lg cursor-pointer border-none transition-colors">
+                                                        class="px-5 py-2.5 bg-gold hover:bg-gold-light text-[#08080e] font-bold text-[13px] rounded-xl cursor-pointer border-none transition-colors">
                                                     Adaugă
                                                 </button>
                                                 <button wire:click="$set('addTechCatId', null)"
-                                                        class="px-2.5 py-1.5 bg-transparent border border-border text-dim text-xs rounded-lg cursor-pointer hover:text-content transition-colors">
+                                                        class="px-4 py-2.5 bg-transparent border border-border text-dim text-[13px] rounded-xl cursor-pointer hover:text-content transition-colors">
                                                     Anulează
                                                 </button>
                                             </div>
@@ -327,22 +329,20 @@
                     {{-- Add category (edit mode) --}}
                     <div x-show="mode === 'edit'" class="mt-1">
                         @if($addCatGradeId === $grade->id)
-                            <div class="bg-surface border border-gold/30 rounded-xl px-3 py-3 flex flex-col gap-2">
-                                <div class="flex gap-2">
-                                    <input wire:model="newCatNameViet" type="text" placeholder="Denumire vietnameză (ex: BO PHAP)"
-                                           class="flex-1 bg-card border border-border rounded-lg px-2.5 py-1.5 text-gold text-xs font-bold uppercase tracking-wide">
-                                    <input wire:model="newCatNameRo" type="text" placeholder="Traducere română (ex: Poziții)"
-                                           class="flex-1 bg-card border border-border rounded-lg px-2.5 py-1.5 text-content text-xs">
-                                </div>
-                                @error('newCatNameViet') <p class="text-red-400 text-xs">{{ $message }}</p> @enderror
-                                @error('newCatNameRo') <p class="text-red-400 text-xs">{{ $message }}</p> @enderror
+                            <div class="bg-surface border border-gold/30 rounded-xl px-4 py-4 flex flex-col gap-3">
+                                <input wire:model="newCatNameViet" type="text" placeholder="Denumire vietnameză (ex: BO PHAP)"
+                                       class="w-full bg-card border border-border rounded-xl px-3.5 py-3 text-gold text-[13px] font-bold uppercase tracking-wide">
+                                <input wire:model="newCatNameRo" type="text" placeholder="Traducere română (ex: Poziții)"
+                                       class="w-full bg-card border border-border rounded-xl px-3.5 py-3 text-content text-[13px]">
+                                @error('newCatNameViet') <p class="text-red-400 text-xs -mt-1">{{ $message }}</p> @enderror
+                                @error('newCatNameRo') <p class="text-red-400 text-xs -mt-1">{{ $message }}</p> @enderror
                                 <div class="flex gap-2">
                                     <button wire:click="addCategory"
-                                            class="px-4 py-1.5 bg-gold hover:bg-gold-light text-[#08080e] font-bold text-xs rounded-lg cursor-pointer border-none transition-colors">
+                                            class="px-5 py-2.5 bg-gold hover:bg-gold-light text-[#08080e] font-bold text-[13px] rounded-xl cursor-pointer border-none transition-colors">
                                         Adaugă
                                     </button>
                                     <button wire:click="$set('addCatGradeId', null)"
-                                            class="px-3 py-1.5 bg-transparent border border-border text-dim hover:text-content text-xs rounded-lg cursor-pointer transition-colors">
+                                            class="px-4 py-2.5 bg-transparent border border-border text-dim hover:text-content text-[13px] rounded-xl cursor-pointer transition-colors">
                                         Anulează
                                     </button>
                                 </div>
