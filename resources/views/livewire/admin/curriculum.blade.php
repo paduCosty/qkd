@@ -28,9 +28,16 @@
 
     {{-- Edit mode strip --}}
     <div x-show="mode === 'edit'" x-transition
-         class="flex items-center gap-2 px-5 py-2 bg-gold/5 border-b border-gold/18 text-[12px] text-gold/70">
-        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        Modificările sunt permanente — revino la <strong class="text-gold mx-1">Vizualizare</strong> când ai terminat.
+         class="flex items-center justify-between gap-2 px-4 py-2 bg-gold/5 border-b border-gold/18 text-[12px] text-gold/70">
+        <div class="flex items-center gap-1.5 min-w-0">
+            <svg class="shrink-0" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span class="truncate">Modificările sunt salvate automat.</span>
+        </div>
+        <button @click="mode = 'view'"
+                class="shrink-0 flex items-center gap-1 text-gold font-semibold text-[12px] bg-gold/10 border border-gold/25 px-2.5 py-1 rounded-lg cursor-pointer border-none transition-colors hover:bg-gold/20">
+            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            Vizualizare
+        </button>
     </div>
 
     <div class="max-w-3xl mx-auto px-5 py-5 pb-16">
