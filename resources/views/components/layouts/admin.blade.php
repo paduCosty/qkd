@@ -188,16 +188,43 @@
             </svg>
             <span class="text-[10px] font-medium leading-none">Examene</span>
         </a>
-        <form method="POST" action="{{ route('logout') }}" class="flex-1">
-            @csrf
-            <button type="submit"
-                    class="w-full h-full flex flex-col items-center justify-center py-2 gap-0.5 text-dim cursor-pointer bg-transparent border-none transition-colors active:text-red-400">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-                </svg>
-                <span class="text-[10px] font-medium leading-none">Ieșire</span>
+        {{-- Profile button — opens sheet, logout requires 2 taps --}}
+        <div x-data="{ open: false }" class="flex-1 relative">
+            <button @click="open = !open"
+                    class="w-full h-full flex flex-col items-center justify-center py-2 gap-0.5 text-dim cursor-pointer bg-transparent border-none transition-colors">
+                <div class="w-5 h-5 rounded-full bg-gradient-to-br from-[#1a1830] to-[#2a2050] border border-gold/60 flex items-center justify-center text-gold font-bold text-[9px]">
+                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                </div>
+                <span class="text-[10px] font-medium leading-none">Profil</span>
             </button>
-        </form>
+
+            {{-- Sheet --}}
+            <div x-show="open"
+                 x-transition:enter="transition ease-out duration-150"
+                 x-transition:enter-start="opacity-0 translate-y-2"
+                 x-transition:enter-end="opacity-100 translate-y-0"
+                 x-transition:leave="transition ease-in duration-100"
+                 x-transition:leave-start="opacity-100 translate-y-0"
+                 x-transition:leave-end="opacity-0 translate-y-2"
+                 @click.outside="open = false"
+                 style="display:none"
+                 class="absolute bottom-full right-0 mb-2 w-48 bg-card border border-border rounded-xl shadow-xl shadow-black/40 overflow-hidden">
+                <div class="px-4 py-3 border-b border-border">
+                    <div class="text-[13px] font-semibold truncate">{{ auth()->user()->name }}</div>
+                    <div class="text-[11px] text-dim">Administrator</div>
+                </div>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit"
+                            class="w-full flex items-center gap-2.5 px-4 py-3 text-[13px] text-red-400 cursor-pointer bg-transparent border-none hover:bg-red-500/8 transition-colors text-left">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                        </svg>
+                        Deconectare
+                    </button>
+                </form>
+            </div>
+        </div>
     </nav>
 
     {{-- Main content --}}
