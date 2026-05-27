@@ -32,9 +32,6 @@
                                 <div class="font-semibold text-[14px] text-content">{{ $exam->title }}</div>
                                 <div class="flex items-center gap-3 mt-1 flex-wrap">
                                     <span class="text-[12px] text-gold font-medium">{{ $exam->date->format('d M Y') }}</span>
-                                    @if($exam->grade)
-                                        <span class="text-[11px] text-dim bg-gold/6 border border-gold/15 px-2 py-0.5 rounded">→ {{ $exam->grade->name }}</span>
-                                    @endif
                                     @if($exam->location)
                                         <span class="text-[12px] text-dim">📍 {{ $exam->location }}</span>
                                     @endif
@@ -66,9 +63,6 @@
                                 <div class="font-semibold text-[14px] text-content">{{ $exam->title }}</div>
                                 <div class="flex items-center gap-3 mt-1 flex-wrap">
                                     <span class="text-[12px] text-dim">{{ $exam->date->format('d M Y') }}</span>
-                                    @if($exam->grade)
-                                        <span class="text-[11px] text-dim bg-card-2 border border-border px-2 py-0.5 rounded">→ {{ $exam->grade->name }}</span>
-                                    @endif
                                 </div>
                             </div>
                             <button wire:click="openRegistrations({{ $exam->id }})"
@@ -100,18 +94,6 @@
                 <input wire:model="title" type="text" placeholder="ex: Examen grade — sesiunea mai 2026"
                        class="w-full bg-card border border-border rounded-xl px-3.5 py-2.5 text-content text-[14px]">
                 @error('title') <p class="text-red-400 text-xs mt-1">{{ $message }}</p> @enderror
-            </div>
-
-            <div>
-                <label class="text-[12px] text-dim font-medium mb-1.5 block">Grad promovat (la trecerea examenului) *</label>
-                <select wire:model.number="gradeId"
-                        class="w-full bg-card border border-border rounded-xl px-3.5 py-2.5 text-content text-[14px] cursor-pointer">
-                    <option value="">— Alege gradul —</option>
-                    @foreach($grades as $grade)
-                        <option value="{{ $grade->id }}">{{ $grade->name }}</option>
-                    @endforeach
-                </select>
-                @error('gradeId') <p class="text-red-400 text-xs mt-1">{{ $message }}</p> @enderror
             </div>
 
             <div class="grid grid-cols-2 gap-3">
@@ -158,7 +140,7 @@
                 <h2 class="font-bold text-[16px] leading-tight">{{ $exam->title }}</h2>
                 <p class="text-xs text-dim mt-0.5">
                     {{ $exam->date->format('d M Y') }}
-                    @if($exam->grade) · → {{ $exam->grade->name }} @endif
+                    @if($exam->location) · 📍 {{ $exam->location }} @endif
                     · {{ $registrations->count() }} înscriși
                 </p>
             </div>

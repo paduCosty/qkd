@@ -10,18 +10,17 @@ use Livewire\Component;
 class Exams extends Component
 {
     public string $view = 'list';
-    public ?int $editExamId  = null;
-    public ?int $viewExamId  = null;
+    public ?int $editExamId = null;
+    public ?int $viewExamId = null;
 
     public string $title    = '';
     public string $date     = '';
     public string $location = '';
     public string $notes    = '';
-    public ?int   $gradeId  = null;
 
     public function openCreate(): void
     {
-        $this->reset(['title', 'date', 'location', 'notes', 'gradeId', 'editExamId']);
+        $this->reset(['title', 'date', 'location', 'notes', 'editExamId']);
         $this->view = 'form';
     }
 
@@ -33,7 +32,6 @@ class Exams extends Component
         $this->date       = $e->date->format('Y-m-d');
         $this->location   = $e->location ?? '';
         $this->notes      = $e->notes ?? '';
-        $this->gradeId    = $e->grade_id;
         $this->view = 'form';
     }
 
@@ -42,7 +40,6 @@ class Exams extends Component
         $this->validate([
             'title'    => ['required', 'string', 'max:150'],
             'date'     => ['required', 'date'],
-            'gradeId'  => ['required', 'exists:grades,id'],
             'location' => ['nullable', 'string', 'max:150'],
             'notes'    => ['nullable', 'string'],
         ]);
@@ -50,7 +47,6 @@ class Exams extends Component
         $data = [
             'title'      => $this->title,
             'date'       => $this->date,
-            'grade_id'   => $this->gradeId,
             'location'   => $this->location ?: null,
             'notes'      => $this->notes ?: null,
             'created_by' => auth()->id(),
@@ -99,42 +95,43 @@ class Exams extends Component
 
     public function markResult(int $enrollmentId, string $result): void
     {
-        $enrollment = ExamEnrollment::with(['user', 'exam'])->findOrFail($enrollmentId);
+        $enrollment = ExamEnrollment::with(['user.currentGrade', 'exam'])->findOrFail($enrollmentId);
         $enrollment->update(['result' => $result]);
 
-        if ($result === 'passed' && $enrollment->exam->grade_id) {
-            $enrollment->user->update(['current_grade_id' => $enrollment->exam->grade_id]);
+        if ($result === 'passed') {
+            $user         = $enrollment->user;
+            $currentOrder = $user->currentGrade?->order ?? 0;
+            $nextGrade    = Grade::where('order', '>', $currentOrder)->orderBy('order')->first();
+            if ($nextGrade) {
+                $user->update(['current_grade_id' => $nextGrade->id]);
+            }
         }
     }
 
     public function render()
     {
-        $upcoming = Exam::with('grade')
-            ->withCount('enrollments')
+        $upcoming = Exam::withCount('enrollments')
             ->where('date', '>=', now()->toDateString())
             ->orderBy('date')
             ->get();
 
-        $past = Exam::with('grade')
-            ->withCount('enrollments')
+        $past = Exam::withCount('enrollments')
             ->where('date', '<', now()->toDateString())
             ->orderByDesc('date')
             ->get();
-
-        $grades = Grade::orderBy('order')->get();
 
         $exam          = null;
         $registrations = null;
 
         if ($this->view === 'registrations' && $this->viewExamId) {
-            $exam = Exam::with('grade')->findOrFail($this->viewExamId);
+            $exam          = Exam::findOrFail($this->viewExamId);
             $registrations = ExamEnrollment::where('exam_id', $this->viewExamId)
                 ->with(['user.currentGrade'])
                 ->orderBy('created_at')
                 ->get();
         }
 
-        return view('livewire.admin.exams', compact('upcoming', 'past', 'grades', 'exam', 'registrations'))
+        return view('livewire.admin.exams', compact('upcoming', 'past', 'exam', 'registrations'))
             ->layout('components.layouts.admin', ['title' => 'Examene']);
     }
 }

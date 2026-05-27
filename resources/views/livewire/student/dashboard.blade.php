@@ -413,11 +413,6 @@
                                 <div class="font-semibold text-[15px] text-content">{{ $exam->title }}</div>
                                 <div class="flex items-center gap-3 mt-1.5 flex-wrap">
                                     <span class="text-[12px] text-gold font-medium">{{ $exam->date->format('d M Y') }}</span>
-                                    @if($exam->grade)
-                                        <span class="text-[11px] text-dim bg-gold/6 border border-gold/15 px-2 py-0.5 rounded">
-                                            Grad vizat: {{ $exam->grade->name }}
-                                        </span>
-                                    @endif
                                     @if($exam->location)
                                         <span class="text-[12px] text-dim">📍 {{ $exam->location }}</span>
                                     @endif
@@ -465,7 +460,7 @@
                             <div class="font-medium text-[14px] text-content">{{ $reg->exam->title }}</div>
                             <div class="text-[12px] text-dim mt-0.5">
                                 {{ $reg->exam->date->format('d M Y') }}
-                                @if($reg->exam->grade) · → {{ $reg->exam->grade->name }} @endif
+
                             </div>
                         </div>
                         @if($reg->result === 'passed')

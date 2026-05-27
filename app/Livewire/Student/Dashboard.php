@@ -104,16 +104,16 @@ class Dashboard extends Component
             ->sortByDesc(fn ($e) => $e->stage->date);
 
         // Exams
-        $upcomingExams = Exam::with('grade')
+        $upcomingExams = Exam::query()
             ->where('date', '>=', now()->toDateString())
             ->orderBy('date')
             ->get();
-
+            
         $myExamEnrollments = ExamEnrollment::where('user_id', $user->id)
             ->pluck('status', 'exam_id');
 
         $examHistory = ExamEnrollment::where('user_id', $user->id)
-            ->with('exam.grade')
+            ->with('exam')
             ->whereHas('exam', fn ($q) => $q->where('date', '<', now()->toDateString()))
             ->get()
             ->sortByDesc(fn ($e) => $e->exam->date);
