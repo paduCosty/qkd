@@ -8,16 +8,9 @@
 }">
 
     {{-- Topbar --}}
-    <div class="bg-card border-b border-border px-5 py-3.5 flex items-center justify-between sticky top-0 z-50">
-        <div>
-            <h1 class="font-[family-name:var(--font-display)] text-[15px] font-bold text-gold tracking-[2px] leading-tight">QWAN KI DO</h1>
-            <p class="text-xs text-dim mt-0.5">Panou antrenor</p>
-        </div>
-        <button @click="tab = 'curricula'; window.location.hash = 'curricula'"
-                wire:click="$set('showAddGrade', true)"
-                class="px-4 py-2 text-[13px] font-bold bg-gold hover:bg-gold-light text-[#08080e] rounded-lg transition-colors cursor-pointer border-none">
-            + Grad nou
-        </button>
+    <div class="bg-card border-b border-border px-5 py-3.5 sticky top-0 z-50">
+        <h1 class="font-[family-name:var(--font-display)] text-[15px] font-bold text-gold tracking-[2px] leading-tight">QWAN KI DO</h1>
+        <p class="text-xs text-dim mt-0.5">Panou antrenor</p>
     </div>
 
     <div class="max-w-4xl mx-auto px-5 py-5 pb-16">
@@ -249,31 +242,6 @@
                 @endforeach
             </div>
 
-            @if($showAddGrade)
-                <div class="bg-card border border-gold/30 rounded-xl p-5 mb-3.5">
-                    <p class="text-[13px] font-bold text-gold mb-3.5">Grad nou</p>
-                    <div class="flex gap-2.5 flex-wrap">
-                        <input wire:model="newGradeName" type="text" placeholder="ex: 1 Câp sau 2 Câp — Intermediar"
-                               class="flex-1 min-w-48 bg-surface border border-border rounded-lg px-3.5 py-2.5 text-content text-sm font-semibold">
-                        <input wire:model.number="newGradeOrder" type="number" min="0" placeholder="Ordine"
-                               class="w-28 bg-surface border border-border rounded-lg px-3.5 py-2.5 text-content text-sm">
-                        <button wire:click="addGrade"
-                                class="px-5 py-2.5 bg-gold hover:bg-gold-light text-[#08080e] font-bold text-sm rounded-lg cursor-pointer border-none transition-colors">
-                            Adaugă
-                        </button>
-                        <button wire:click="$set('showAddGrade', false)"
-                                class="px-4 py-2.5 bg-transparent border border-border text-dim hover:text-content text-sm rounded-lg cursor-pointer transition-colors">
-                            Anulează
-                        </button>
-                    </div>
-                    @error('newGradeName') <p class="text-red-400 text-xs mt-2">{{ $message }}</p> @enderror
-                </div>
-            @else
-                <button wire:click="$set('showAddGrade', true)"
-                        class="w-full bg-transparent border-2 border-dashed border-border text-dim hover:border-gold hover:text-gold py-3.5 rounded-xl text-sm cursor-pointer transition-colors">
-                    + Adaugă grad nou
-                </button>
-            @endif
 
         </div>
 
