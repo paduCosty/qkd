@@ -157,8 +157,51 @@
         </div>
     </aside>
 
+    {{-- Mobile bottom nav --}}
+    <nav class="md:hidden fixed bottom-0 inset-x-0 z-50 bg-card border-t border-border flex safe-area-bottom">
+        <a href="{{ route('admin.dashboard') }}"
+           class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 transition-colors {{ request()->routeIs('admin.dashboard') ? 'text-gold' : 'text-dim' }}">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+            </svg>
+            <span class="text-[10px] font-medium leading-none">Elevi</span>
+        </a>
+        <a href="{{ route('admin.curriculum') }}"
+           class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 transition-colors {{ request()->routeIs('admin.curriculum') || request()->routeIs('admin.grades.*') ? 'text-gold' : 'text-dim' }}">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
+            </svg>
+            <span class="text-[10px] font-medium leading-none">Programă</span>
+        </a>
+        <a href="{{ route('admin.stages') }}"
+           class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 transition-colors {{ request()->routeIs('admin.stages') ? 'text-gold' : 'text-dim' }}">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            <span class="text-[10px] font-medium leading-none">Stagii</span>
+        </a>
+        <a href="{{ route('admin.exams') }}"
+           class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 transition-colors {{ request()->routeIs('admin.exams') ? 'text-gold' : 'text-dim' }}">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+            </svg>
+            <span class="text-[10px] font-medium leading-none">Examene</span>
+        </a>
+        <form method="POST" action="{{ route('logout') }}" class="flex-1">
+            @csrf
+            <button type="submit"
+                    class="w-full h-full flex flex-col items-center justify-center py-2 gap-0.5 text-dim cursor-pointer bg-transparent border-none transition-colors active:text-red-400">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                </svg>
+                <span class="text-[10px] font-medium leading-none">Ieșire</span>
+            </button>
+        </form>
+    </nav>
+
     {{-- Main content --}}
-    <div class="md:ml-60">
+    <div class="md:ml-60 pb-16 md:pb-0">
         {{ $slot }}
     </div>
 
