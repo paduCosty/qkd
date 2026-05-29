@@ -18,4 +18,13 @@ class Coaches extends Component
         return view('livewire.pages.coaches', compact('coaches'))
             ->layout('components.layouts.guest', ['title' => 'Antrenori']);
     }
+        public function demoteCoach(int $id): void
+    {
+        // Nu permite retrogradarea owner-ului
+        $coach = User::where('id', $id)->where('role', 'admin')->first();
+        if ($coach && !$coach->is_owner) {
+            $coach->update(['status' => 'inactive']);
+        }
+    }
 }
+

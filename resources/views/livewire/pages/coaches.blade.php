@@ -33,7 +33,7 @@
                         <div class="min-w-0">
                             <div class="font-semibold text-[15px] leading-tight truncate">{{ $coach->name }}</div>
                             @if($coach->is_owner)
-                                <div class="text-[11px] text-gold mt-0.5">Fondator & Instructor Principal</div>
+                                <div class="text-[11px] text-gold mt-0.5">Dezvoltator Aplicatie</div>
                             @else
                                 <div class="text-[11px] text-dim mt-0.5">Instructor</div>
                             @endif
@@ -42,6 +42,10 @@
                             <div class="ml-auto shrink-0">
                                 <span class="text-[10px] bg-gold/10 text-gold border border-gold/30 px-2 py-0.5 rounded-full">Owner</span>
                             </div>
+                        @else
+                            {{-- <div class="ml-auto shrink-0">
+                                <button class="mt-2 bg-gray-500/10 border border-gray-500/30 text-red-500 text-[11px] px-2.5 py-1.5 rounded-lg cursor-pointer transition-colors hover:bg-gray-500/20 ml-2">Elimina</span>
+                            </div> --}}
                         @endif
                     </div>
                 @endforeach

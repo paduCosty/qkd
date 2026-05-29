@@ -139,6 +139,10 @@
                                                 class="mt-2 bg-gold/10 border border-gold/30 text-gold text-[11px] px-2.5 py-1.5 rounded-lg cursor-pointer transition-colors hover:bg-gold/20">
                                             Promovează antrenor
                                         </button>
+                                        <button @click="$store.confirm.open('Marchezi {{ $student->name }} ca inactiv?', () => $wire.setStudentInactive({{ $student->id }}))"
+                                                class="mt-2 bg-gray-500/10 border border-gray-500/30 text-gray-400 text-[11px] px-2.5 py-1.5 rounded-lg cursor-pointer transition-colors hover:bg-gray-500/20 ml-2">
+                                            Marchează inactiv
+                                        </button>
                                     @endif
                             </div>
                         </div>
@@ -146,6 +150,49 @@
                 </div>
             @endif
 
+
+            <p class="text-[11px] mt-10 uppercase tracking-[1.5px] text-dim font-semibold mb-2.5">Elevi inactivi</p>
+
+            @if(!$inactiveStudents->isEmpty())
+                <div class="flex flex-col gap-2.5">
+                    @foreach($inactiveStudents as $student)
+                        <div class="bg-card border border-border rounded-xl px-4 py-3.5">
+                            <div class="flex items-center justify-between flex-wrap gap-2.5">
+                                <div class="flex items-center gap-2.5">
+                                    <div class="w-9 h-9 rounded-full bg-gradient-to-br from-[#1a2040] to-[#2a3060] border border-[#3b4080] flex items-center justify-center font-bold text-[14px] text-[#8090d0] shrink-0">
+                                        {{ strtoupper(substr($student->name, 0, 1)) }}
+                                    </div>
+                                    <div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="font-semibold text-[14px]">{{ $student->name }}</span>
+                                            <a href="{{ route('admin.student.profile', $student) }}"
+                                               class="text-[11px] text-dim hover:text-gold transition-colors border border-border hover:border-gold/30 px-2 py-0.5 rounded-md no-underline shrink-0">
+                                                Profil
+                                            </a>
+                                        </div>
+                                        <div class="text-xs text-dim">{{ $student->email }}</div>
+                                    </div>
+                                </div>
+                                <select wire:change="setStudentGrade({{ $student->id }}, $event.target.value)"
+                                        class="bg-surface border border-border rounded-lg px-2.5 py-1.5 text-content text-xs cursor-pointer">
+                                    <option value="">— Fără grad —</option>
+                                    @foreach($allGrades as $grade)
+                                        <option value="{{ $grade->id }}" {{ $student->current_grade_id === $grade->id ? 'selected' : '' }}>
+                                            {{ $grade->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                    @if(auth()->user()->is_owner)
+                                        <button @click="$store.confirm.open('Marchezi {{ $student->name }} ca activ?', () => $wire.setStudentActive({{ $student->id }}))"
+                                                class="mt-2 bg-gray-500/10 border border-gray-500/30 text-red-500 text-[11px] px-2.5 py-1.5 rounded-lg cursor-pointer transition-colors hover:bg-gray-500/20 ml-2">
+                                            Marchează Activ
+                                        </button>
+                                    @endif
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
         </div>
 
 

@@ -117,9 +117,12 @@ class Dashboard extends Component
         $activeStudents = User::where('role', 'student')->where('status', 'active')
             ->with('currentGrade')->orderBy('name')->get();
 
-        $grades = Grade::withCount(['categories', 'categories as techniques_count' => fn ($q) => $q->withCount('techniques')])
+        $inactiveStudents = User::where('role', 'student')->where('status', 'inactive')
+            ->with('currentGrade')->orderBy('name')->get();
+
+        $grades = Grade::withCount(['categories', 'categories as techniques_count' => fn($q) => $q->withCount('techniques')])
             ->with([
-                'categories' => fn ($q) => $q->withCount('techniques')->orderBy('order'),
+                'categories' => fn($q) => $q->withCount('techniques')->orderBy('order'),
             ])
             ->orderBy('order')
             ->get();
@@ -129,14 +132,27 @@ class Dashboard extends Component
         return view('livewire.admin.dashboard', [
             'pendingStudents' => $pendingStudents,
             'activeStudents'  => $activeStudents,
+            'inactiveStudents' => $inactiveStudents,
             'grades'          => $grades,
             'allGrades'       => $allGrades,
             'stats'           => [
                 'activeCount'    => $activeStudents->count(),
                 'pendingCount'   => $pendingStudents->count(),
+                'inactiveCount'  => $inactiveStudents->count(),
                 'techniqueCount' => Technique::count(),
                 'gradeCount'     => $grades->count(),
             ],
         ])->layout('components.layouts.admin', ['title' => 'Dashboard']);
+    }
+
+    public function setStudentInactive(int $id): void
+    {
+        abort_unless(auth()->user()->is_owner, 403);
+        User::where('id', $id)->where('role', 'student')->update(['status' => 'inactive']);
+    }
+    public function setStudentActive(int $id): void
+    {
+        abort_unless(auth()->user()->is_owner, 403);
+        User::where('id', $id)->where('role', 'student')->update(['status' => 'active']);
     }
 }

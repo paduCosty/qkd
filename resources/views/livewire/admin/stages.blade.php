@@ -109,8 +109,8 @@
             <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="text-[12px] text-dim font-medium mb-1.5 block">Data stagiului *</label>
-                    <input wire:model="date" type="date"
-                           class="w-full bg-card border border-border rounded-xl px-3.5 py-2.5 text-content text-[14px]">
+                    <input wire:model="date" type="datetime-local"
+                        class="w-full bg-card border border-border rounded-xl px-3.5 py-2.5 text-content text-[14px]">
                     @error('date') <p class="text-red-400 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>
                 <div>
